@@ -4,14 +4,17 @@ import { propagateAttributes } from "@langfuse/tracing";
 import { createFileRoute } from "@tanstack/react-router";
 import {
 	convertToModelMessages,
+	createIdGenerator,
 	createUIMessageStreamResponse,
 	streamText,
 	toUIMessageStream,
 	type UIMessage,
+	validateUIMessages,
 } from "ai";
 
 import { MODELS } from "#/lib/models";
 import { AGENT_INSTRUCTIONS } from "#/lib/prompts";
+import { CHAT_ID, loadMessages, saveMessages } from "#/server/chat-store";
 
 export const Route = createFileRoute("/api/chat")({
 	server: {
@@ -24,8 +27,18 @@ export const Route = createFileRoute("/api/chat")({
 					);
 				}
 
-				const { id, messages }: { id: string; messages: UIMessage[] } =
+				// The client sends only the new message; history comes from the database,
+				// so a client can't rewrite earlier turns.
+				const { id, message }: { id: string; message: UIMessage } =
 					await request.json();
+				if (!CHAT_ID.test(id)) {
+					return new Response("Invalid chat id.", { status: 400 });
+				}
+
+				const messages = await validateUIMessages({
+					messages: [...(await loadMessages(id)), message],
+				});
+				await saveMessages(id, [message]);
 
 				// One Langfuse session per chat, so every turn of a conversation
 				// is grouped together in the trace view.
@@ -41,7 +54,12 @@ export const Route = createFileRoute("/api/chat")({
 				);
 
 				return createUIMessageStreamResponse({
-					stream: toUIMessageStream({ stream: result.stream }),
+					stream: toUIMessageStream({
+						stream: result.stream,
+						originalMessages: messages,
+						generateMessageId: createIdGenerator({ prefix: "msg", size: 16 }),
+						onEnd: ({ responseMessage }) => saveMessages(id, [responseMessage]),
+					}),
 				});
 			},
 		},

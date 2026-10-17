@@ -7,5 +7,6 @@ export default defineConfig({
 	schema: "./src/db/schema.ts",
 	out: "./drizzle",
 	schemaFilter: ["agent"],
+	casing: "snake_case",
 	dbCredentials: { url: process.env.DATABASE_URL as string },
 });

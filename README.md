@@ -11,6 +11,7 @@ cp .env.example .env.local   # then fill it in
 npm install
 npm run langfuse:up          # Langfuse at http://localhost:3000
 npm run db:migrate           # after running db/bootstrap.sql once
+npm run db:seed              # loads data/*.json (regenerate with npm run data:generate)
 npm run dev                  # app at http://localhost:3001
 ```
 
@@ -21,7 +22,7 @@ Each phase ends with something runnable and a short write-up in `docs/`.
 | Phase | What it adds | Status |
 | --- | --- | --- |
 | 0 · [Setup](docs/00-setup.md) | Chat UI, AI Gateway, Langfuse tracing, database roles | Done |
-| 1 · Data | Dummy recipes, articles, customers and orders; chunking and embeddings | |
+| 1 · [Data](docs/01-data.md) | Dummy recipes, articles, customers and orders; saved chats and a sidebar; a Data page; chunking and embeddings | Data, saved chats and Data page done; chunking and embeddings come with phase 2 |
 | 2 · Retrieval | Vector, keyword and hybrid search with rerank; a `/search` playground | |
 | 3 · Agent | System prompt in Langfuse, tools, citations, approval for write tools | |
 | 4 · Feedback | Thumbs up/down as Langfuse scores; failing traces become dataset items | |

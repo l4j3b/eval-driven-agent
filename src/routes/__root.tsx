@@ -1,10 +1,20 @@
-import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import {
+	createRootRoute,
+	HeadContent,
+	Outlet,
+	Scripts,
+} from "@tanstack/react-router";
 
+import { AppSidebar } from "#/components/app-sidebar";
+import { SidebarInset, SidebarProvider } from "#/components/ui/sidebar";
 import { TooltipProvider } from "#/components/ui/tooltip";
+import { listChats } from "#/server/chats";
 
 import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({
+	// The sidebar's chat history. Chats call router.invalidate() to refresh it.
+	loader: () => listChats(),
 	head: () => ({
 		meta: [
 			{
@@ -35,8 +45,21 @@ export const Route = createRootRoute({
 		],
 	}),
 	shellComponent: RootDocument,
+	component: RootLayout,
 	notFoundComponent: NotFound,
 });
+
+function RootLayout() {
+	const chats = Route.useLoaderData();
+	return (
+		<SidebarProvider>
+			<AppSidebar chats={chats} />
+			<SidebarInset className="h-dvh overflow-hidden">
+				<Outlet />
+			</SidebarInset>
+		</SidebarProvider>
+	);
+}
 
 function NotFound() {
 	return (
