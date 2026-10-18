@@ -10,6 +10,7 @@ import {
 	DatabaseIcon,
 	SearchIcon,
 	SquarePenIcon,
+	ThumbsUpIcon,
 	Trash2Icon,
 } from "lucide-react";
 import { CustomerPicker, type SessionInfo } from "#/components/customer-picker";
@@ -92,6 +93,14 @@ export function AppSidebar({
 									<Link to="/search">
 										<SearchIcon />
 										Search
+									</Link>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+							<SidebarMenuItem>
+								<SidebarMenuButton asChild isActive={pathname === "/feedback"}>
+									<Link to="/feedback">
+										<ThumbsUpIcon />
+										Feedback
 									</Link>
 								</SidebarMenuButton>
 							</SidebarMenuItem>

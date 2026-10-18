@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DataRouteImport } from './routes/data'
+import { Route as FeedbackRouteImport } from './routes/feedback'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ChatChatIdRouteImport } from './routes/chat.$chatId'
@@ -23,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
 const DataRoute = DataRouteImport.update({
   id: '/data',
   path: '/data',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedbackRoute = FeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchRoute = SearchRouteImport.update({
@@ -44,6 +50,7 @@ const ChatChatIdRoute = ChatChatIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/data': typeof DataRoute
+  '/feedback': typeof FeedbackRoute
   '/search': typeof SearchRoute
   '/api/chat': typeof ApiChatRoute
   '/chat/$chatId': typeof ChatChatIdRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/data': typeof DataRoute
+  '/feedback': typeof FeedbackRoute
   '/search': typeof SearchRoute
   '/api/chat': typeof ApiChatRoute
   '/chat/$chatId': typeof ChatChatIdRoute
@@ -59,21 +67,31 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/data': typeof DataRoute
+  '/feedback': typeof FeedbackRoute
   '/search': typeof SearchRoute
   '/api/chat': typeof ApiChatRoute
   '/chat/$chatId': typeof ChatChatIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/data' | '/search' | '/api/chat' | '/chat/$chatId'
+  fullPaths:
+    '/' | '/data' | '/feedback' | '/search' | '/api/chat' | '/chat/$chatId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/data' | '/search' | '/api/chat' | '/chat/$chatId'
-  id: '__root__' | '/' | '/data' | '/search' | '/api/chat' | '/chat/$chatId'
+  to: '/' | '/data' | '/feedback' | '/search' | '/api/chat' | '/chat/$chatId'
+  id:
+    | '__root__'
+    | '/'
+    | '/data'
+    | '/feedback'
+    | '/search'
+    | '/api/chat'
+    | '/chat/$chatId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DataRoute: typeof DataRoute
+  FeedbackRoute: typeof FeedbackRoute
   SearchRoute: typeof SearchRoute
   ApiChatRoute: typeof ApiChatRoute
   ChatChatIdRoute: typeof ChatChatIdRoute
@@ -93,6 +111,13 @@ declare module '@tanstack/react-router' {
       path: '/data'
       fullPath: '/data'
       preLoaderRoute: typeof DataRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feedback': {
+      id: '/feedback'
+      path: '/feedback'
+      fullPath: '/feedback'
+      preLoaderRoute: typeof FeedbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search': {
@@ -122,6 +147,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DataRoute: DataRoute,
+  FeedbackRoute: FeedbackRoute,
   SearchRoute: SearchRoute,
   ApiChatRoute: ApiChatRoute,
   ChatChatIdRoute: ChatChatIdRoute,

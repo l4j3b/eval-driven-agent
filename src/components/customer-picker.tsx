@@ -31,6 +31,12 @@ export function CustomerPicker({ session }: { session: SessionInfo }) {
 		await router.invalidate();
 	};
 
+	// Radix only learns an item's label once the dropdown has rendered, so on a
+	// server-rendered page the trigger would be blank. Spell it out instead.
+	const current = session.customers.find(
+		(customer) => customer.id === session.customerId,
+	);
+
 	return (
 		<div className="grid gap-1 px-2">
 			<p className="text-muted-foreground text-xs">Signed in as</p>
@@ -40,7 +46,9 @@ export function CustomerPicker({ session }: { session: SessionInfo }) {
 			>
 				<SelectTrigger className="w-full">
 					<UserIcon className="size-4 text-muted-foreground" />
-					<SelectValue />
+					<SelectValue>
+						{current ? current.name : "Guest (not signed in)"}
+					</SelectValue>
 				</SelectTrigger>
 				<SelectContent>
 					<SelectItem value={GUEST}>Guest (not signed in)</SelectItem>

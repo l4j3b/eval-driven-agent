@@ -27,7 +27,7 @@ Each phase ends with something runnable and a short write-up in `docs/`.
 | 1 · [Data](docs/01-data.md) | Dummy recipes, articles, customers and orders; saved chats and a sidebar; a Data page | Done |
 | 2 · [Retrieval](docs/02-retrieval.md) | Chunking, contextual retrieval, embeddings; vector, keyword and hybrid search with rerank; a `/search` playground | Done |
 | 3 · [Agent](docs/03-agent.md) | System prompt in Langfuse, tools, citations, approval for write tools, simulated sign-in | Done |
-| 4 · Feedback | Thumbs up/down as Langfuse scores; failing traces become dataset items | |
+| 4 · [Feedback](docs/04-feedback.md) | One trace per turn; thumbs up/down as Langfuse scores; a review page that turns bad answers into eval cases | Done |
 | 5 · Evals | Datasets, deterministic and LLM-judge scorers, experiments | |
 | 6 · Self-improvement | An optimizer proposes prompts; an eval gate promotes or rejects them | |
 | 7 · Stretch | Guardrails, memory, model routing, caching, MCP | |

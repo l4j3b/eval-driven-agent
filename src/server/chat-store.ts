@@ -98,7 +98,9 @@ export async function saveMessages(
 				target: chatMessages.id,
 				set: {
 					parts: sql`excluded.parts`,
-					metadata: sql`excluded.metadata`,
+					// Merge, so feedback saved on a message survives the message
+					// being updated later (e.g. an approval continuing the turn).
+					metadata: sql`coalesce(${chatMessages.metadata}, '{}'::jsonb) || coalesce(excluded.metadata, '{}'::jsonb)`,
 				},
 			});
 	});

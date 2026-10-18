@@ -1,6 +1,6 @@
 import "#/server/telemetry";
 
-import { propagateAttributes } from "@langfuse/tracing";
+import { propagateAttributes, startActiveObservation } from "@langfuse/tracing";
 import { createFileRoute } from "@tanstack/react-router";
 import {
 	convertToModelMessages,
@@ -15,6 +15,7 @@ import {
 	validateUIMessages,
 } from "ai";
 
+import type { MessageMetadata } from "#/lib/evals";
 import { MODELS } from "#/lib/models";
 import { SourceRegistry } from "#/lib/sources";
 import { loadAgentPrompt, loadCustomer } from "#/server/agent/prompt";
@@ -63,6 +64,42 @@ function applyApprovals(stored: UIMessage, incoming: UIMessage): UIMessage {
 		}),
 	} as UIMessage;
 }
+
+// Credits need the customer's OK, and the policy is checked before asking:
+// anything the policy forbids, including amounts over the cap, is refused
+// outright with a reason the agent can relay.
+function creditApproval(customerId: string | null) {
+	return async (input: unknown) => {
+		const { orderId, recipeId } = input as {
+			orderId: string;
+			recipeId: string;
+		};
+		if (!customerId) {
+			return { type: "denied" as const, reason: "No customer is signed in." };
+		}
+		const quote = await quoteCredit(customerId, orderId, recipeId);
+		if (!quote.ok) return { type: "denied" as const, reason: quote.error };
+		if (quote.overLimit) {
+			const already = quote.alreadyCredited
+				? ` on top of $${quote.alreadyCredited.toFixed(2)} already credited for this box`
+				: "";
+			return {
+				type: "denied" as const,
+				reason: `This credit would be $${quote.amount.toFixed(2)}${already}, above the $${AUTO_CREDIT_LIMIT} automatic limit per box. Offer to open a support review instead.`,
+			};
+		}
+		return {
+			type: "user-approval" as const,
+			reason: `Credit $${quote.amount.toFixed(2)} for ${quote.recipeTitle} (order ${orderId}, delivered ${quote.deliveryDate}).`,
+		};
+	};
+}
+
+const textOf = (message: UIMessage) =>
+	message.parts
+		.map((part) => (part.type === "text" ? part.text : ""))
+		.join("\n")
+		.trim();
 
 export const Route = createFileRoute("/api/chat")({
 	server: {
@@ -123,8 +160,14 @@ export const Route = createFileRoute("/api/chat")({
 				const messages = await validateUIMessages({ messages: history, tools });
 				await saveMessages(id, [latest], customerId);
 				const prompt = await loadAgentPrompt(customer);
+				const question = textOf(
+					history.findLast((row) => row.role === "user") ?? latest,
+				);
 
-				const result = await propagateAttributes(
+				// One trace per turn: a root span wraps everything the AI SDK emits,
+				// and its trace id goes to the browser as message metadata, so
+				// feedback on an answer lands on the exact trace that produced it.
+				return propagateAttributes(
 					{
 						sessionId: id,
 						userId: customerId ?? "guest",
@@ -133,66 +176,54 @@ export const Route = createFileRoute("/api/chat")({
 							promptVersion: String(prompt.langfusePrompt.version),
 						},
 					},
-					async () =>
-						streamText({
-							model: MODELS.agent,
-							instructions: prompt.instructions,
-							messages: await convertToModelMessages(messages, { tools }),
-							tools,
-							stopWhen: stepCountIs(MAX_STEPS),
-							// Each step is a model call; the free tier allows ~5 a minute,
-							// so retry rate limits with backoff instead of failing the turn.
-							maxRetries: 4,
-							// Credits need the customer's OK, and the policy is checked
-							// before asking: anything over the cap is refused outright.
-							toolApproval: {
-								issueCredit: async (input) => {
-									const { orderId, recipeId } = input as {
-										orderId: string;
-										recipeId: string;
-									};
-									if (!customerId) {
-										return {
-											type: "denied",
-											reason: "No customer is signed in.",
-										};
-									}
-									const quote = await quoteCredit(
-										customerId,
-										orderId,
-										recipeId,
-									);
-									if (!quote.ok) return { type: "denied", reason: quote.error };
-									if (quote.overLimit) {
-										return {
-											type: "denied",
-											reason: `This credit would be $${quote.amount.toFixed(2)}${quote.alreadyCredited ? ` on top of $${quote.alreadyCredited.toFixed(2)} already credited for this box` : ""}, above the $${AUTO_CREDIT_LIMIT} automatic limit per box. Offer to open a support review instead.`,
-										};
-									}
-									return {
-										type: "user-approval",
-										reason: `Credit $${quote.amount.toFixed(2)} for ${quote.recipeTitle} (order ${orderId}, delivered ${quote.deliveryDate}).`,
-									};
-								},
-							},
-							experimental_toolApprovalSecret: process.env.TOOL_APPROVAL_SECRET,
-							runtimeContext: { langfusePrompt: prompt.langfusePrompt },
-							telemetry: {
-								functionId: "chat",
-								includeRuntimeContext: { langfusePrompt: true },
-							},
-						}),
-				);
+					() =>
+						startActiveObservation(
+							"chat-turn",
+							async (turn) => {
+								turn.update({ input: question });
+								const result = streamText({
+									model: MODELS.agent,
+									instructions: prompt.instructions,
+									messages: await convertToModelMessages(messages, { tools }),
+									tools,
+									stopWhen: stepCountIs(MAX_STEPS),
+									// Each step is a model call; the free tier allows ~5 a
+									// minute, so retry rate limits with backoff instead of
+									// failing the turn.
+									maxRetries: 4,
+									toolApproval: { issueCredit: creditApproval(customerId) },
+									experimental_toolApprovalSecret:
+										process.env.TOOL_APPROVAL_SECRET,
+									runtimeContext: { langfusePrompt: prompt.langfusePrompt },
+									telemetry: {
+										functionId: "chat",
+										includeRuntimeContext: { langfusePrompt: true },
+									},
+								});
 
-				return createUIMessageStreamResponse({
-					stream: toUIMessageStream({
-						stream: result.stream,
-						originalMessages: messages,
-						generateMessageId: createIdGenerator({ prefix: "msg", size: 16 }),
-						onEnd: ({ responseMessage }) =>
-							saveMessages(id, [responseMessage], customerId),
-					}),
-				});
+								return createUIMessageStreamResponse({
+									stream: toUIMessageStream({
+										stream: result.stream,
+										originalMessages: messages,
+										generateMessageId: createIdGenerator({
+											prefix: "msg",
+											size: 16,
+										}),
+										messageMetadata: ({ part }) =>
+											part.type === "start"
+												? ({ traceId: turn.traceId } satisfies MessageMetadata)
+												: undefined,
+										onEnd: async ({ responseMessage }) => {
+											await saveMessages(id, [responseMessage], customerId);
+											turn.update({ output: textOf(responseMessage) });
+											turn.end();
+										},
+									}),
+								});
+							},
+							{ endOnExit: false },
+						),
+				);
 			},
 		},
 	},

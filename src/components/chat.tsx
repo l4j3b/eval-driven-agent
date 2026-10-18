@@ -31,6 +31,7 @@ import {
 } from "#/components/ai-elements/prompt-input";
 import { Shimmer } from "#/components/ai-elements/shimmer";
 import { Suggestion } from "#/components/ai-elements/suggestion";
+import { Feedback } from "#/components/chat/feedback";
 import {
 	citationLinks,
 	citedNumbers,
@@ -39,11 +40,12 @@ import {
 } from "#/components/chat/sources";
 import { ToolCall } from "#/components/chat/tool-call";
 import { InputGroupAddon } from "#/components/ui/input-group";
+import type { MessageMetadata } from "#/lib/evals";
 import { sourcesIn } from "#/lib/sources";
 import type { AgentTools } from "#/server/agent/tools";
 
 export type MiseUIMessage = UIMessage<
-	unknown,
+	MessageMetadata,
 	UIDataTypes,
 	InferUITools<AgentTools>
 >;
@@ -173,6 +175,14 @@ export function Chat({
 										{message.role === "assistant" && (
 											<SourceList sources={cited} />
 										)}
+										{message.role === "assistant" &&
+											!(busy && message.id === messages.at(-1)?.id) && (
+												<Feedback
+													chatId={id}
+													messageId={message.id}
+													metadata={message.metadata}
+												/>
+											)}
 									</MessageContent>
 								</Message>
 							);
