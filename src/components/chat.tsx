@@ -1,7 +1,15 @@
 import { useChat } from "@ai-sdk/react";
 import { useRouter } from "@tanstack/react-router";
-import { DefaultChatTransport, type UIMessage } from "ai";
+import {
+	DefaultChatTransport,
+	type InferUITools,
+	isToolUIPart,
+	lastAssistantMessageIsCompleteWithApprovalResponses,
+	type UIDataTypes,
+	type UIMessage,
+} from "ai";
 import { ChefHatIcon } from "lucide-react";
+import { useMemo } from "react";
 
 import {
 	Conversation,
@@ -21,13 +29,30 @@ import {
 	PromptInputSubmit,
 	PromptInputTextarea,
 } from "#/components/ai-elements/prompt-input";
+import { Shimmer } from "#/components/ai-elements/shimmer";
 import { Suggestion } from "#/components/ai-elements/suggestion";
+import {
+	citationLinks,
+	citedNumbers,
+	linkCitations,
+	SourceList,
+} from "#/components/chat/sources";
+import { ToolCall } from "#/components/chat/tool-call";
 import { InputGroupAddon } from "#/components/ui/input-group";
+import { sourcesIn } from "#/lib/sources";
+import type { AgentTools } from "#/server/agent/tools";
+
+export type MiseUIMessage = UIMessage<
+	unknown,
+	UIDataTypes,
+	InferUITools<AgentTools>
+>;
 
 const SUGGESTIONS = [
 	"Something cozy for a rainy night, under 40 minutes",
-	"I'm allergic to peanuts. What Thai dishes can I make?",
-	"My box was missing the salmon. Can I get a credit?",
+	"Any Thai dishes I can make with my allergies?",
+	"My box this week was missing the salmon. Can I get a credit?",
+	"What's in my next box?",
 ];
 
 export function Chat({
@@ -38,16 +63,26 @@ export function Chat({
 	initialMessages: UIMessage[];
 }) {
 	const router = useRouter();
-	const { messages, sendMessage, status, stop, error } = useChat({
+	const {
+		messages,
+		sendMessage,
+		addToolApprovalResponse,
+		status,
+		stop,
+		error,
+	} = useChat<MiseUIMessage>({
 		id,
-		messages: initialMessages,
+		messages: initialMessages as MiseUIMessage[],
 		transport: new DefaultChatTransport({
 			api: "/api/chat",
-			// The server keeps the history, so only the new message is sent.
+			// The server keeps the history, so only the new (or just-approved)
+			// message is sent.
 			prepareSendMessagesRequest: ({ id, messages }) => ({
 				body: { id, message: messages.at(-1) },
 			}),
 		}),
+		// After the customer approves or declines a credit, continue the turn.
+		sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses,
 		// Refresh the sidebar so a new chat shows up and moves to the top.
 		onFinish: () =>
 			void router.invalidate({
@@ -55,10 +90,16 @@ export function Chat({
 			}),
 	});
 
+	// Citation numbers are unique across the chat, so one map serves every answer.
+	const sources = useMemo(
+		() => new Map(sourcesIn(messages).map((source) => [source.n, source])),
+		[messages],
+	);
+	const components = useMemo(() => ({ a: citationLinks(sources) }), [sources]);
+
+	const busy = status === "submitted" || status === "streaming";
 	const submit = (text: string) => {
-		if (!text.trim() || status === "submitted" || status === "streaming") {
-			return;
-		}
+		if (!text.trim() || busy) return;
 		void sendMessage({ text });
 	};
 
@@ -75,7 +116,7 @@ export function Chat({
 							<p className="text-muted-foreground">
 								Ask about recipes, cooking, or your Mise account.
 							</p>
-							<div className="mt-4 flex flex-wrap justify-center gap-2">
+							<div className="mt-4 flex max-w-xl flex-wrap justify-center gap-2">
 								{SUGGESTIONS.map((suggestion) => (
 									<Suggestion
 										className="font-normal text-muted-foreground"
@@ -87,23 +128,58 @@ export function Chat({
 							</div>
 						</ConversationEmptyState>
 					) : (
-						messages.map((message) => (
-							<Message from={message.role} key={message.id}>
-								<MessageContent>
-									{message.parts.map((part, index) => {
-										if (part.type !== "text") return null;
-										const key = `${message.id}-${index}`;
-										return message.role === "user" ? (
-											<p className="whitespace-pre-wrap" key={key}>
-												{part.text}
-											</p>
-										) : (
-											<MessageResponse key={key}>{part.text}</MessageResponse>
-										);
-									})}
-								</MessageContent>
-							</Message>
-						))
+						messages.map((message) => {
+							const text = message.parts
+								.map((part) => (part.type === "text" ? part.text : ""))
+								.join("\n");
+							const cited = [...new Set(citedNumbers(text))]
+								.sort((a, b) => a - b)
+								.flatMap((n) => {
+									const source = sources.get(n);
+									return source ? [source] : [];
+								});
+							return (
+								<Message from={message.role} key={message.id}>
+									<MessageContent
+										className={message.role === "assistant" ? "w-full" : ""}
+									>
+										{message.parts.map((part, index) => {
+											const key = `${message.id}-${index}`;
+											if (isToolUIPart(part)) {
+												return (
+													<ToolCall
+														key={key}
+														onApproval={(approvalId, approved) =>
+															addToolApprovalResponse({
+																id: approvalId,
+																approved,
+															})
+														}
+														part={part}
+													/>
+												);
+											}
+											if (part.type !== "text") return null;
+											return message.role === "user" ? (
+												<p className="whitespace-pre-wrap" key={key}>
+													{part.text}
+												</p>
+											) : (
+												<MessageResponse components={components} key={key}>
+													{linkCitations(part.text)}
+												</MessageResponse>
+											);
+										})}
+										{message.role === "assistant" && (
+											<SourceList sources={cited} />
+										)}
+									</MessageContent>
+								</Message>
+							);
+						})
+					)}
+					{status === "submitted" && (
+						<Shimmer className="text-sm">Thinking…</Shimmer>
 					)}
 					{error && <p className="text-destructive text-sm">{error.message}</p>}
 				</ConversationContent>

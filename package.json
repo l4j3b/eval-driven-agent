@@ -18,6 +18,7 @@
     "db:seed": "tsx --env-file=.env.local scripts/seed.ts",
     "data:generate": "tsx --env-file=.env.local scripts/generate-data.ts",
     "index": "tsx --env-file=.env.local scripts/index-content.ts",
+    "prompt:push": "tsx --env-file=.env.local scripts/push-prompt.ts",
     "langfuse:up": "docker compose -f langfuse/docker-compose.yml --env-file langfuse/.env up -d",
     "langfuse:down": "docker compose -f langfuse/docker-compose.yml --env-file langfuse/.env down"
   },
@@ -49,6 +50,7 @@
     "radix-ui": "^1.6.7",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "shiki": "^4.5.0",
     "streamdown": "^2.7.0",
     "tailwind-merge": "^3.0.2",
     "tailwindcss": "^4.1.18",

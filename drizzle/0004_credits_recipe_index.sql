@@ -1,0 +1,1 @@
+CREATE INDEX "credits_recipe_id_index" ON "agent"."credits" USING btree ("recipe_id");

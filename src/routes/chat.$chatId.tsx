@@ -15,7 +15,7 @@ function ChatPage() {
 	const { chatId } = Route.useParams();
 	const messages = Route.useLoaderData();
 	const title = rootRoute.useLoaderData({
-		select: (chats) => chats.find((chat) => chat.id === chatId)?.title,
+		select: (data) => data.chats.find((chat) => chat.id === chatId)?.title,
 	});
 
 	return (

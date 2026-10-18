@@ -12,7 +12,7 @@ import {
 	SquarePenIcon,
 	Trash2Icon,
 } from "lucide-react";
-
+import { CustomerPicker, type SessionInfo } from "#/components/customer-picker";
 import {
 	Sidebar,
 	SidebarContent,
@@ -33,7 +33,13 @@ export type ChatSummary = { id: string; title: string; updatedAt: Date };
 
 const LANGFUSE_URL = "http://localhost:3000";
 
-export function AppSidebar({ chats }: { chats: ChatSummary[] }) {
+export function AppSidebar({
+	chats,
+	session,
+}: {
+	chats: ChatSummary[];
+	session: SessionInfo;
+}) {
 	const pathname = useRouterState({
 		select: (state) => state.location.pathname,
 	});
@@ -135,6 +141,7 @@ export function AppSidebar({ chats }: { chats: ChatSummary[] }) {
 			</SidebarContent>
 
 			<SidebarFooter>
+				<CustomerPicker session={session} />
 				<SidebarMenu>
 					<SidebarMenuItem>
 						<SidebarMenuButton asChild>

@@ -282,10 +282,36 @@ export const credits = agent
 				.notNull()
 				.references(() => customers.id, { onDelete: "cascade" }),
 			orderId: text().references(() => orders.id, { onDelete: "set null" }),
+			recipeId: text().references(() => recipes.id),
 			amount: money(6).notNull(),
 			reason: text().notNull(),
 			issuedBy: text().notNull(),
 			issuedAt: timestamp({ withTimezone: true }).notNull(),
+		},
+		(t) => [
+			index().on(t.customerId),
+			index().on(t.orderId),
+			index().on(t.recipeId),
+		],
+	)
+	.enableRLS();
+
+export const ticketStatus = agent.enum("ticket_status", ["open", "resolved"]);
+
+// Cases the agent hands to a human, e.g. a credit above the automatic limit.
+export const supportTickets = agent
+	.table(
+		"support_tickets",
+		{
+			id: text().primaryKey(),
+			customerId: text()
+				.notNull()
+				.references(() => customers.id, { onDelete: "cascade" }),
+			orderId: text().references(() => orders.id, { onDelete: "set null" }),
+			chatId: text(),
+			summary: text().notNull(),
+			status: ticketStatus().notNull().default("open"),
+			createdAt: createdAt(),
 		},
 		(t) => [index().on(t.customerId), index().on(t.orderId)],
 	)

@@ -1,5 +1,5 @@
 import type { UIMessage } from "ai";
-import { asc, desc, eq, sql } from "drizzle-orm";
+import { and, asc, desc, eq, isNull, type SQL, sql } from "drizzle-orm";
 
 import { db } from "#/db/client";
 import { chatMessages, chats } from "#/db/schema";
@@ -28,12 +28,26 @@ function hasContent(message: UIMessage) {
 	return message.parts.some((part) => part.type !== "step-start");
 }
 
-export async function listChats() {
+// Chats belong to the customer who started them (or to guests, when null).
+const ownedBy = (customerId: string | null): SQL =>
+	customerId ? eq(chats.customerId, customerId) : isNull(chats.customerId);
+
+export async function listChats(customerId: string | null) {
 	return db
 		.select({ id: chats.id, title: chats.title, updatedAt: chats.updatedAt })
 		.from(chats)
+		.where(ownedBy(customerId))
 		.orderBy(desc(chats.updatedAt))
 		.limit(50);
+}
+
+// undefined when the chat doesn't exist yet.
+export async function chatOwner(chatId: string) {
+	const [row] = await db
+		.select({ customerId: chats.customerId })
+		.from(chats)
+		.where(eq(chats.id, chatId));
+	return row ? row.customerId : undefined;
 }
 
 export async function loadMessages(chatId: string): Promise<UIMessage[]> {
@@ -54,13 +68,17 @@ export async function loadMessages(chatId: string): Promise<UIMessage[]> {
 
 // Creates the chat on its first message (titled after it) and upserts messages,
 // so a reply that grows across steps overwrites its earlier version.
-export async function saveMessages(chatId: string, all: UIMessage[]) {
+export async function saveMessages(
+	chatId: string,
+	all: UIMessage[],
+	customerId: string | null,
+) {
 	const messages = all.filter(hasContent);
 	if (messages.length === 0) return;
 	await db.transaction(async (tx) => {
 		await tx
 			.insert(chats)
-			.values({ id: chatId, title: titleFrom(messages) })
+			.values({ id: chatId, title: titleFrom(messages), customerId })
 			.onConflictDoUpdate({
 				target: chats.id,
 				set: { updatedAt: sql`now()` },
@@ -86,6 +104,6 @@ export async function saveMessages(chatId: string, all: UIMessage[]) {
 	});
 }
 
-export async function deleteChat(chatId: string) {
-	await db.delete(chats).where(eq(chats.id, chatId));
+export async function deleteChat(chatId: string, customerId: string | null) {
+	await db.delete(chats).where(and(eq(chats.id, chatId), ownedBy(customerId)));
 }

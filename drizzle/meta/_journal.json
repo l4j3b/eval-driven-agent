@@ -22,6 +22,20 @@
       "when": 1792280991819,
       "tag": "0002_chunks",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792285587515,
+      "tag": "0003_credits_recipe_support_tickets",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792285605451,
+      "tag": "0004_credits_recipe_index",
+      "breakpoints": true
     }
   ]
 }

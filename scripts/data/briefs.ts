@@ -2,41 +2,7 @@
 // cuisine; the trap recipes and every article are specified by hand, because
 // their details are what the evals check later.
 
-export const ALLERGENS = [
-	"peanuts",
-	"tree-nuts",
-	"dairy",
-	"eggs",
-	"gluten",
-	"soy",
-	"fish",
-	"shellfish",
-	"sesame",
-] as const;
-
-export const DIET_TAGS = [
-	"vegetarian",
-	"vegan",
-	"pescatarian",
-	"gluten-free",
-	"dairy-free",
-	"high-protein",
-	"low-carb",
-	"spicy",
-	"kid-friendly",
-] as const;
-
-export const INGREDIENT_CATEGORIES = [
-	"produce",
-	"protein",
-	"seafood",
-	"dairy",
-	"grain",
-	"pantry",
-	"spice",
-	"herb",
-	"sauce",
-] as const;
+export { ALLERGENS, DIET_TAGS, INGREDIENT_CATEGORIES } from "#/lib/catalog";
 
 export const RECIPES_PER_CUISINE = 9;
 
