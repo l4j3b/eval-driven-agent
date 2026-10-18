@@ -9,7 +9,7 @@ browser ──(new message, or an approval decision)──► /api/chat
    1. who: chat owner, or the session cookie for a new chat
    2. history: loaded from Postgres (the client can't rewrite it)
    3. prompt: "mise-agent" @ production from Langfuse (fallback: code copy)
-   4. streamText: Gemini Flash + tools, up to 8 steps
+   4. agent.stream(): the version's model + tools, up to 8 steps (ToolLoopAgent)
         └─ issueCredit → approval policy → refused / approval card
    5. stream back: text, tool calls, citations · save the reply on end
 ```
@@ -29,6 +29,7 @@ browser ──(new message, or an approval decision)──► /api/chat
 The system prompt is stored in Langfuse as `mise-agent`. The app loads whichever version carries the `production` label, caches it for a minute, and fills in `{{today}}` and `{{customer}}`. Every generation in Langfuse links to the prompt version that produced it, so scores can later be compared by version.
 
 - **Why not keep it in code?** A new version can be tested and promoted (or rolled back) by moving a label, with no deploy. That's what the phase 6 optimizer will do.
+- **The model is part of the version.** A version can pin its agent model in its config (`{ "model": "anthropic/claude-sonnet-5.5" }`, `npm run prompt:push -- --model …`). Promoting it moves the text and the model together, and evals always say which model ran. Versions without one use `MODELS.agent`.
 - **Fallback:** if Langfuse is down, the SDK returns the copy in `src/lib/prompts.ts` and marks it as a fallback in the trace.
 - **The frozen clock:** `{{today}}` is 2026-10-17 (`DEMO_TODAY`), the date the dummy data is anchored on. Policy checks and eval results don't drift with the calendar.
 
@@ -87,7 +88,7 @@ npm run dev
 
 Pick a customer at the bottom of the sidebar. Ava Chen (peanut allergy) has all the scripted scenarios. `npm run db:seed` resets the accounts, removing agent-issued credits and tickets, but it also unlinks existing chats from their customers.
 
-## Interview questions this prepares you for
+## Questions this answers
 
 - **How do you stop an agent from doing something harmful?** Least-privilege tools, identity from the session, server-computed amounts, policy checks before approval, human approval for writes, re-validation at execution.
 - **Where should business rules live: prompt or code?** Explanations in the prompt (and the knowledge base), enforcement in code. The model reads the credit policy to explain it; the server enforces it.

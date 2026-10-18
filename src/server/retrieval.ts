@@ -3,6 +3,7 @@ import "#/server/telemetry";
 import { rerank } from "ai";
 
 import { sql } from "#/db/client";
+import { reciprocalRankFusion } from "#/lib/fusion";
 import { MODELS } from "#/lib/models";
 import { embedQuery } from "#/server/embeddings";
 
@@ -127,29 +128,6 @@ export async function keywordSearch(
 		limit ${limit}
 	`;
 	return rows.map(toHit);
-}
-
-export type FusedHit = Hit & { ranks: (number | null)[] };
-
-// Reciprocal Rank Fusion: each list votes 1 / (k + rank) for its hits. Ranks
-// are comparable across lists even when scores aren't (cosine similarity and
-// ts_rank live on different scales). k = 60 is the usual constant: it keeps a
-// single #1 from drowning out a chunk that both lists rank well.
-export function reciprocalRankFusion(lists: Hit[][], k = 60): FusedHit[] {
-	const fused = new Map<string, FusedHit>();
-	lists.forEach((list, listIndex) => {
-		list.forEach((hit, index) => {
-			const entry = fused.get(hit.id) ?? {
-				...hit,
-				score: 0,
-				ranks: lists.map(() => null),
-			};
-			entry.score += 1 / (k + index + 1);
-			entry.ranks[listIndex] = index + 1;
-			fused.set(hit.id, entry);
-		});
-	});
-	return [...fused.values()].sort((a, b) => b.score - a.score);
 }
 
 const rerankText = (hit: Hit) =>

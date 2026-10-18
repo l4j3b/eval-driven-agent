@@ -5,6 +5,7 @@ import { z } from "zod";
 import { db } from "#/db/client";
 import { customers } from "#/db/schema";
 import {
+	CUSTOMER_ID,
 	currentCustomerId,
 	setCurrentCustomerId,
 } from "#/server/session.server";
@@ -26,10 +27,7 @@ export const getSession = createServerFn({ method: "GET" }).handler(
 export const setSessionCustomer = createServerFn({ method: "POST" })
 	.validator(
 		z.object({
-			customerId: z
-				.string()
-				.regex(/^cus_\d{3}$/)
-				.nullable(),
+			customerId: z.string().regex(CUSTOMER_ID).nullable(),
 		}),
 	)
 	.handler(({ data }) => setCurrentCustomerId(data.customerId));

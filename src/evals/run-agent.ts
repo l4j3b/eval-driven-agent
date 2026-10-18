@@ -1,9 +1,9 @@
-import { generateText, type ModelMessage } from "ai";
+import type { ModelMessage } from "ai";
 import { nanoid } from "nanoid";
 
 import type { EvalInput } from "#/lib/evals";
 import type { Source } from "#/lib/sources";
-import { prepareAgent } from "#/server/agent/agent";
+import { createAgent } from "#/server/agent/agent";
 import type { PromptSelector } from "#/server/agent/prompt";
 import { throttled } from "#/server/throttle";
 
@@ -41,7 +41,7 @@ export async function runAgent(
 	prompt: PromptSelector,
 	modelOverride?: string,
 ): Promise<AgentOutput> {
-	const agent = await prepareAgent({
+	const mise = await createAgent({
 		customerId: input.customerId,
 		chatId: `eval-${nanoid(8)}`,
 		history: [],
@@ -57,7 +57,7 @@ export async function runAgent(
 	}));
 
 	const started = performance.now();
-	const result = await generateText({ ...agent.settings, messages });
+	const result = await mise.agent.generate({ messages });
 	const latencyMs = Math.round(performance.now() - started);
 
 	const calls = new Map<string, ToolCallRecord>();
@@ -111,11 +111,11 @@ export async function runAgent(
 			outputTokens: result.totalUsage.outputTokens,
 		},
 		latencyMs,
-		prompt: agent.prompt.langfusePrompt,
-		model: agent.modelId,
-		instructions: agent.prompt.instructions,
+		prompt: mise.prompt.langfusePrompt,
+		model: mise.modelId,
+		instructions: mise.prompt.instructions,
 		toolDescriptions: Object.fromEntries(
-			Object.entries(agent.tools).map(([name, tool]) => [
+			Object.entries(mise.tools).map(([name, tool]) => [
 				name,
 				typeof tool.description === "string" ? tool.description : "",
 			]),

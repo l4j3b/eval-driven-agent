@@ -1,6 +1,7 @@
 import {
 	type LanguageModel,
 	stepCountIs,
+	ToolLoopAgent,
 	type ToolSet,
 	type UIMessage,
 } from "ai";
@@ -18,12 +19,16 @@ import {
 	quoteCredit,
 } from "#/server/agent/tools";
 
-const MAX_STEPS = 8;
+// Each step is one model call, which may ask for tools; the loop stops when
+// the model answers without calling one, or after this many steps.
+export const MAX_STEPS = 8;
 
 // Credits need the customer's OK, and the policy is checked before asking:
 // anything the policy forbids, including amounts over the cap, is refused
-// outright with a reason the agent can relay.
-function creditApproval(customerId: string | null) {
+// outright with a reason the agent can relay. Same shape as the AI SDK's
+// `toolApproval` functions, so the hand-written loop (src/lib/agent-loop.ts)
+// can use it too.
+export function creditApproval(customerId: string | null) {
 	return async (input: unknown) => {
 		const { orderId, recipeId } = input as {
 			orderId: string;
@@ -65,9 +70,13 @@ export type AgentOptions = {
 	functionId?: string;
 };
 
-// The agent, as settings for streamText (chat) or generateText (evals), so
-// both run exactly the same model, prompt, tools and approval policy.
-export async function prepareAgent(options: AgentOptions) {
+// The agent for one request: a ToolLoopAgent bound to this customer's tools
+// and this prompt version. Chat streams it (`agent.stream`), evals run it to
+// the end (`agent.generate`), so both use exactly the same model, prompt,
+// tools and approval policy. ToolLoopAgent runs the loop: call the model, run
+// the tools it asks for, feed the results back, repeat until it answers.
+// docs/07-agent-loop.md walks through a hand-written version of that loop.
+export async function createAgent(options: AgentOptions) {
 	const customer = await loadCustomer(options.customerId);
 	const tools = createTools({
 		customer,
@@ -79,26 +88,23 @@ export async function prepareAgent(options: AgentOptions) {
 	// The model is part of the prompt version; versions that don't pin one
 	// use the default agent model.
 	const modelId = options.modelOverride ?? prompt.model ?? MODELS.agent;
-	return {
-		customer,
-		prompt,
+	const model = options.wrapModel ? options.wrapModel(modelId) : modelId;
+	const agent = new ToolLoopAgent({
+		id: "mise-agent",
+		model,
+		instructions: prompt.instructions,
 		tools,
-		modelId,
-		settings: {
-			model: options.wrapModel ? options.wrapModel(modelId) : modelId,
-			instructions: prompt.instructions,
-			tools,
-			stopWhen: stepCountIs(MAX_STEPS),
-			// Each step is a model call; the free tier allows ~5 a minute, so
-			// retry rate limits with backoff instead of failing the turn.
-			maxRetries: 4,
-			toolApproval: { issueCredit: creditApproval(options.customerId) },
-			experimental_toolApprovalSecret: process.env.TOOL_APPROVAL_SECRET,
-			runtimeContext: { langfusePrompt: prompt.langfusePrompt },
-			telemetry: {
-				functionId: options.functionId ?? "chat",
-				includeRuntimeContext: { langfusePrompt: true },
-			},
+		stopWhen: stepCountIs(MAX_STEPS),
+		// Each step is a model call; the free tier allows ~5 a minute, so
+		// retry rate limits with backoff instead of failing the turn.
+		maxRetries: 4,
+		toolApproval: { issueCredit: creditApproval(options.customerId) },
+		experimental_toolApprovalSecret: process.env.TOOL_APPROVAL_SECRET,
+		runtimeContext: { langfusePrompt: prompt.langfusePrompt },
+		telemetry: {
+			functionId: options.functionId ?? "chat",
+			includeRuntimeContext: { langfusePrompt: true },
 		},
-	};
+	});
+	return { agent, model, customer, prompt, tools, modelId };
 }

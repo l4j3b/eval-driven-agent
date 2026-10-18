@@ -1,10 +1,11 @@
 // Loads ./data/*.json (from `npm run data:generate`) into the agent schema.
-// Replaces the catalog and accounts in one transaction; chats are left alone.
+// Replaces the catalog and accounts in one transaction; chats are kept.
 import { readFile } from "node:fs/promises";
-import type { PgTable } from "drizzle-orm/pg-core";
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
 
+import { eq, isNotNull } from "drizzle-orm";
+import type { PgTable } from "drizzle-orm/pg-core";
+
+import { db, sql } from "#/db/client";
 import * as schema from "#/db/schema";
 import { slugify } from "#/lib/slug";
 
@@ -63,12 +64,6 @@ for (const recipe of recipes) {
 	});
 }
 
-const sql = postgres(process.env.DATABASE_URL as string, {
-	max: 1,
-	onnotice: () => {},
-});
-const db = drizzle(sql, { schema, casing: "snake_case" });
-
 async function insertAll<T extends PgTable>(
 	tx: Parameters<Parameters<typeof db.transaction>[0]>[0],
 	table: T,
@@ -81,6 +76,13 @@ async function insertAll<T extends PgTable>(
 
 try {
 	await db.transaction(async (tx) => {
+		// Deleting customers would detach their chats (on delete set null), so
+		// remember who owns what and reattach after the reload. Ids are stable.
+		const owners = await tx
+			.select({ id: schema.chats.id, customerId: schema.chats.customerId })
+			.from(schema.chats)
+			.where(isNotNull(schema.chats.customerId));
+
 		// Children first, so foreign keys never block a delete.
 		for (const table of [
 			schema.credits,
@@ -118,6 +120,15 @@ try {
 				issuedAt: new Date(credit.issuedAt),
 			})),
 		);
+
+		const reseeded = new Set(accounts.customers.map((customer) => customer.id));
+		for (const { id, customerId } of owners) {
+			if (!customerId || !reseeded.has(customerId)) continue;
+			await tx
+				.update(schema.chats)
+				.set({ customerId })
+				.where(eq(schema.chats.id, id));
+		}
 	});
 	console.log(
 		[

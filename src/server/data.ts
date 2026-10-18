@@ -21,7 +21,9 @@ function groupBy<T, K>(rows: T[], key: (row: T) => K) {
 	const groups = new Map<K, T[]>();
 	for (const row of rows) {
 		const k = key(row);
-		groups.set(k, [...(groups.get(k) ?? []), row]);
+		const group = groups.get(k);
+		if (group) group.push(row);
+		else groups.set(k, [row]);
 	}
 	return groups;
 }

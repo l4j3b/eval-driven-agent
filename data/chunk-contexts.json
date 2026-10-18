@@ -1,0 +1,414 @@
+{
+	"article:allergens-at-mise#0": {
+		"contentHash": "232ab70cc974b06c48262c0a7d58fc4b2896450eccd9425e4bd01eaf047a99ba",
+		"context": "The article discusses allergen handling at Mise. This chunk introduces the company's commitment to transparency regarding food allergies."
+	},
+	"article:allergens-at-mise#1": {
+		"contentHash": "4d134b63f49bed305718fb83a55ace93af99f0b3444a27ad6e1d8b1903722a04",
+		"context": "This chunk details Mise's kitchen environment, stating that all 9 major allergens are handled and cross-contact is possible, meaning no recipe can be guaranteed allergen-free."
+	},
+	"article:allergens-at-mise#2": {
+		"contentHash": "72a8b0df42f2c3b2ac131008b3bcb837f9721415510a62058292b942ca452bd9",
+		"context": "This chunk explains how Mise helps customers manage allergies by listing allergens on recipe cards and allowing users to set allergy preferences to filter recipes."
+	},
+	"article:allergens-at-mise#3": {
+		"contentHash": "edf56253515cd5f341e6f98cd92febbcd9a94b753d0b24a1da75f66e44db7a8b",
+		"context": "This chunk provides advice for customers with severe allergies, recommending they consult a doctor before using Mise meal kits, and concludes the article by reiterating Mise's commitment to transparency."
+	},
+	"article:blooming-spices#0": {
+		"contentHash": "be10d1ffbe4b325e08320c2a91cb5d539f1055037225a6462a2d9d1a3adcf179",
+		"context": "This article is about enhancing spice flavor. This chunk introduces the topic of toasting and blooming spices as transformative cooking techniques."
+	},
+	"article:blooming-spices#1": {
+		"contentHash": "1c37763533bd35fc5120dfeb54f63fb0448b5b1c21de70272df715bcbf018fd6",
+		"context": "This article discusses how to unlock spice flavor. This chunk explains why spices are important for adding taste, aroma, and texture to food."
+	},
+	"article:blooming-spices#2": {
+		"contentHash": "32edd0d463facab757fddf8a454c05594728c4d0311bbd7cab626301855c1c51",
+		"context": "This article explores techniques for intensifying spice flavor. This chunk details how to toast whole spices in a dry pan to release their aromatic oils."
+	},
+	"article:blooming-spices#3": {
+		"contentHash": "6c53d0ace45b35d55d3ee22ef57770d2f415fb2dcf66ae829dc3d39a674e555a",
+		"context": "This article is about maximizing spice flavor. This chunk explains the technique of blooming ground spices in hot oil for more even and intense flavor."
+	},
+	"article:blooming-spices#4": {
+		"contentHash": "a5a0b88ee6a3bd0dab386c7151b5cd7f8204502fdad7171acff328dd6c062f10",
+		"context": "This article covers special spice considerations. This chunk provides guidance on using asafoetida (hing), including its flavor, potency, and gluten content."
+	},
+	"article:blooming-spices#5": {
+		"contentHash": "89ca53d600f7673da337edf837543805465e742f8b6a7e8acb1e250a2b8becbd",
+		"context": "This article guides readers on improving their cooking with spices. This chunk summarizes how toasting and blooming spices elevate everyday meals with vibrant flavor."
+	},
+	"article:braising-101#0": {
+		"contentHash": "4d7c422ce44997be19e374ae79a1f26e10cba89d840795ff32302e1cd01cc704",
+		"context": "Article \"Braising 101\": This chunk introduces braising as a cooking technique for tender, flavorful meat, perfect for busy home cooks."
+	},
+	"article:braising-101#1": {
+		"contentHash": "e1e56a06eb4d70cdbf09386231431bf71b149608ae4c023c0bde1967610d380d",
+		"context": "Article \"Braising 101\": This chunk discusses choosing the right cuts of meat for braising, emphasizing tougher, flavorful options."
+	},
+	"article:braising-101#2": {
+		"contentHash": "e93dada8690e754025bd14ed8b3ccea4082afde693552bd7faabbc50c96030f4",
+		"context": "Article \"Braising 101\": This chunk explains the initial steps of braising, focusing on browning the meat and building a flavor base with aromatics."
+	},
+	"article:braising-101#3": {
+		"contentHash": "a13d07415885c9a18b9ae3eae8c34d4abcdc177282f04d0cd171851e67880163",
+		"context": "Article \"Braising 101\": This chunk details the braising environment, including adding liquid and cooking covered in a 325°F oven."
+	},
+	"article:braising-101#4": {
+		"contentHash": "2712abe0cfca53b713713d0dae47e920b94fb85c9ab51dac86a8a8afd1cdfceb",
+		"context": "Article \"Braising 101\": This chunk covers the braising time, checking for doneness, resting the meat, and serving the final dish."
+	},
+	"article:cancel-subscription#0": {
+		"contentHash": "1c92c7b0ba9bba950ff7e038ec3a52ae2a87137e27b8f6eea220f59fd9756a8e",
+		"context": "Cancelling Your Subscription: This chunk explains how to cancel your Mise subscription by logging into your account and navigating to Plan settings."
+	},
+	"article:cancel-subscription#1": {
+		"contentHash": "1a446e24c6fe4240103886d4859c64e182a04e03a1dfbf43cf857674f0de6649",
+		"context": "Cancelling Your Subscription: This chunk details the weekly cutoff time for cancellations to avoid being charged for the next box and explains what happens if the cutoff is missed."
+	},
+	"article:cancel-subscription#2": {
+		"contentHash": "33729ad2f7196572a36a5eed0b1023caf8cede8a27538fe21073357267174ab2",
+		"context": "Cancelling Your Subscription: This chunk addresses what happens to accumulated credits upon cancellation, stating they are kept for 12 months for reactivation."
+	},
+	"article:cancel-subscription#3": {
+		"contentHash": "7b23185bf091d9f30206f63f5e270bd1122fd2d673b02bddba777ff7fa5aa114",
+		"context": "Cancelling Your Subscription: This chunk contrasts cancelling with skipping weeks, highlighting the benefits of skipping for temporary breaks and maintaining credits."
+	},
+	"article:common-substitutions#0": {
+		"contentHash": "b9cb86077fc5a741522d1364f07401a246d8822d38ececf8fff9cce6c0cc4277",
+		"context": "The article \"Common Ingredient Substitutions\" introduces the importance of knowing ingredient swaps. This first chunk sets the stage for the guide."
+	},
+	"article:common-substitutions#1": {
+		"contentHash": "bf78d037bd4d8b261c3f4e3d0f4c70a84c3651b3431286888ed162a8e6de8969",
+		"context": "This chunk from \"Common Ingredient Substitutions\" covers dairy substitutions, specifically buttermilk, sour cream, and Greek yogurt."
+	},
+	"article:common-substitutions#2": {
+		"contentHash": "d89e092f15068d0102f18b56bd6e80fd07ac54bd18989b934bf10118894d93ae",
+		"context": "This section of \"Common Ingredient Substitutions\" explains how to substitute eggs, focusing on the 'flax egg' as a binder."
+	},
+	"article:common-substitutions#3": {
+		"contentHash": "4ea4f95639daf2934f2458ddbd8042d5024aed04d1f16201903b2eaee3c1bd69",
+		"context": "The article \"Common Ingredient Substitutions\" details flavor enhancer swaps in this chunk, including fresh vs. dried herbs and soy sauce alternatives."
+	},
+	"article:common-substitutions#4": {
+		"contentHash": "476ca4b95ee6edb2027aea763bea44f8b19f6574beb5146554c7266c0f19a582",
+		"context": "This final chunk of \"Common Ingredient Substitutions\" concludes the guide by encouraging home cooks to use these substitutions and enjoy their cooking."
+	},
+	"article:credit-policy-2024#0": {
+		"contentHash": "7c6e8c0fc96820521bc07e17c3d556fa900b8d6713d730631bccd4dd5554b095",
+		"context": "The article \"Missing Ingredient Credits\" explains what to do when an ingredient is missing from a Mise delivery. This first chunk introduces the problem of missing ingredients."
+	},
+	"article:credit-policy-2024#1": {
+		"contentHash": "e6c6a0071a9a4a2d52bc87504cc8d0e9f6e8bea335e1e6b05adcbc8ce78d82cc",
+		"context": "This chunk from \"Missing Ingredient Credits\" details how to report a missing ingredient and the timeframe for doing so."
+	},
+	"article:credit-policy-2024#2": {
+		"contentHash": "c6810eb6c403a80d9ce36304ccf7d17ae1ebb305a9025f6314d3d9b69668b73f",
+		"context": "This section of \"Missing Ingredient Credits\" explains how customers receive a credit for missing ingredients and the maximum credit amount."
+	},
+	"article:credit-policy-2024#3": {
+		"contentHash": "dbae5cff7826bfc801411826cae7c40230a052907f4bda4705099a496f125663",
+		"context": "The final chunk of \"Missing Ingredient Credits\" covers how to use the credit and its expiration, and encourages customers to contact support."
+	},
+	"article:credit-policy-missing-ingredients#0": {
+		"contentHash": "f80c84b158269507dd7a611763760be7bd0d03b3fe3d1d60283e6a21a161883b",
+		"context": "This article explains how Mise handles missing or damaged ingredients. This first chunk introduces the topic and assures customers that credits are a simple process."
+	},
+	"article:credit-policy-missing-ingredients#1": {
+		"contentHash": "cd69f8c0a78ec84a51241afa6cbd1cfbcaa951a16e59d8472d0595a57280c3f5",
+		"context": "This section of the article details the process for reporting missing or damaged ingredients, including the timeframe and necessary documentation."
+	},
+	"article:credit-policy-missing-ingredients#2": {
+		"contentHash": "98930c6f82bd364f2d73fad353e6144cbc96f54d1356e0675a025e4a080bcf44",
+		"context": "This chunk explains how the credit amount is calculated for missing or damaged ingredients, emphasizing that it's based on the per-serving price and plan size."
+	},
+	"article:credit-policy-missing-ingredients#3": {
+		"contentHash": "858d35aa770ed4c90252f9a128d2e865a7a7170437ced3d259cd49cf99b6fdb6",
+		"context": "This part of the article describes the approval process for ingredient credits, noting automatic approval for amounts up to $25 and manual review for larger sums."
+	},
+	"article:credit-policy-missing-ingredients#4": {
+		"contentHash": "3a73328cb5f84fda169a1588cff1167180a6911ba6cec57adc70e24f413a08fb",
+		"context": "This final chunk covers how approved credits are applied to future orders, their automatic nature, and the fact that they do not expire."
+	},
+	"article:dairy-free-swaps#0": {
+		"contentHash": "0d7f7acc529f4d95945c4056ca405729e74f6e102c715391f3b888f6f8dbee35",
+		"context": "The article \"Dairy-Free Swaps\" introduces the topic of dairy-free cooking and explains that this chunk provides an overview of the article's purpose."
+	},
+	"article:dairy-free-swaps#1": {
+		"contentHash": "ae7d105ee8992a50a7279da28ce67751f2de4e8ffa417e0d43be27c6a9c91e7f",
+		"context": "In the article \"Dairy-Free Swaps,\" this chunk focuses on butter alternatives, specifically olive oil and vegan butter, for dairy-free cooking."
+	},
+	"article:dairy-free-swaps#2": {
+		"contentHash": "c2653973fdd397c77571053fe6dde17003e7ab51e8025b802fbe74f60c006c74",
+		"context": "This chunk from the article \"Dairy-Free Swaps\" discusses using full-fat coconut milk as a dairy-free substitute for cream in recipes."
+	},
+	"article:dairy-free-swaps#3": {
+		"contentHash": "11775547f37043e10d892592eec1f01e5187b538831751ae4669af98f05782e0",
+		"context": "The article \"Dairy-Free Swaps\" features this chunk, which details nutritional yeast as a dairy-free alternative for achieving a cheesy flavor."
+	},
+	"article:dairy-free-swaps#4": {
+		"contentHash": "0b02f1cd7407db758e38ee7493e1d4cb794bfd0da0036623b80282de8c9d2fec",
+		"context": "This final chunk of the article \"Dairy-Free Swaps\" covers unsweetened oat milk as a versatile dairy-free milk substitute and concludes the article."
+	},
+	"article:delivery-windows#0": {
+		"contentHash": "b8e22bc8d119200b514bcb223ef31a5ac43fbfbf4cf8db2397835431b8155315",
+		"context": "Delivery Days and Windows: This chunk introduces Mise and the general concept of meal delivery."
+	},
+	"article:delivery-windows#1": {
+		"contentHash": "11a66a3286f7520bb128469aee871dd7e2203cee73bce28c7d515bae54d8262f",
+		"context": "Delivery Days and Windows: This chunk details Mise's delivery schedule, including days and times."
+	},
+	"article:delivery-windows#2": {
+		"contentHash": "e7fc7a2dbefc71cad8e2a66534f99b61eb7caa21231a02d2ed9bf27aba3cd808",
+		"context": "Delivery Days and Windows: This chunk explains how to choose and change your delivery day."
+	},
+	"article:delivery-windows#3": {
+		"contentHash": "fc550d928f7e43cca03d72d01a8621469682ba38594c956f8414c71f8b610eac",
+		"context": "Delivery Days and Windows: This chunk describes how to track your delivery."
+	},
+	"article:delivery-windows#4": {
+		"contentHash": "50a9c5a5c376bac282634a607963161a756ff56a3e6f43978df0e8ce614ba651",
+		"context": "Delivery Days and Windows: This chunk addresses what to do if your delivery is late."
+	},
+	"article:gluten-free-swaps#0": {
+		"contentHash": "dfdad1ddb50fa2ab867f1d43841f304c1c9dc734aaf33929f8ed7e401d39eb4c",
+		"context": "Gluten-Free Swaps: This introductory chunk explains that eating gluten-free can still be flavorful and offers simple substitutions for common recipes."
+	},
+	"article:gluten-free-swaps#1": {
+		"contentHash": "3bf55aee65866edcd5c463c8cf01ff5c296f7d2ea3238b8c084714c15aa42051",
+		"context": "Gluten-Free Swaps: This chunk discusses how to make gluten-free pasta dishes using rice or chickpea pasta and tips for cooking them perfectly."
+	},
+	"article:gluten-free-swaps#2": {
+		"contentHash": "daecb963e819123fed4fc58950401d60b35386cf9e53848a01a88fa39e39387e",
+		"context": "Gluten-Free Swaps: This chunk focuses on using cornstarch as a gluten-free alternative to flour for thickening sauces, gravies, and stews."
+	},
+	"article:gluten-free-swaps#3": {
+		"contentHash": "6c4d9adf61ac4b779cb761ad0ad2fc48e8dfdb3e5882d61dd8eccbcfa9fbdbde",
+		"context": "Gluten-Free Swaps: This chunk covers gluten-free alternatives to breadcrumbs, such as gluten-free panko and crushed rice crackers, for adding texture."
+	},
+	"article:gluten-free-swaps#4": {
+		"contentHash": "e01e9e764cf7854e983b8dd49a0cebfa7ba29e1f623dff21dfdd085396523e6d",
+		"context": "Gluten-Free Swaps: This chunk highlights the importance of checking labels for hidden gluten in ingredients like soy sauce and gochujang, and suggests gluten-free alternatives."
+	},
+	"article:how-to-sear-scallops#0": {
+		"contentHash": "6a32a117d7e309b14ef61b99fa10cd38b22f84cb3350d223a09f768a5cb0aac9",
+		"context": "Article about searing scallops, this chunk introduces the topic and its appeal."
+	},
+	"article:how-to-sear-scallops#1": {
+		"contentHash": "c14efb80d5a285b8c8e782dcf0683353292bc39d6def1852269bfbedf952eb7c",
+		"context": "Article about searing scallops, this chunk covers the preparation steps including drying the scallops and removing the side muscle."
+	},
+	"article:how-to-sear-scallops#2": {
+		"contentHash": "416e90ccc6ffc3c9c9adf9cd536410455e2c98e68e9a5f91943ea65585d1f2df",
+		"context": "Article about searing scallops, this chunk explains how to choose the right pan and heat it to the correct temperature."
+	},
+	"article:how-to-sear-scallops#3": {
+		"contentHash": "a839ff0ec58eefeb3e1e1ac529a035070ae6a356f3a352fd61b989f67db598ec",
+		"context": "Article about searing scallops, this chunk details the searing process itself, including timing and knowing when the scallops are done."
+	},
+	"article:knife-skills-basics#0": {
+		"contentHash": "4b15f074e30699d24c52ab49b66ab66c78e551ae15944b6f79acd723f36742fd",
+		"context": "This article is about knife skills. This chunk is an introduction to the importance of knife skills."
+	},
+	"article:knife-skills-basics#1": {
+		"contentHash": "c6e351d237a2c7a314aac4bf5f797158222d9a9a40161353cdc24809caa3fa8c",
+		"context": "This article is about knife skills. This chunk covers the safety technique known as the claw grip."
+	},
+	"article:knife-skills-basics#2": {
+		"contentHash": "5c32d46bc348c3b17cfa885374fc33eeddea7b5bca209b80be30fae5b2ec5642",
+		"context": "This article is about knife skills. This chunk explains how to dice ingredients and the different sizes of dice cuts."
+	},
+	"article:knife-skills-basics#3": {
+		"contentHash": "3cd2954055259571590b7960ad91b9071ce373a98dff47427b1cca0cfdee6a8c",
+		"context": "This article is about knife skills. This chunk describes the technique of mincing and its purpose."
+	},
+	"article:knife-skills-basics#4": {
+		"contentHash": "e59dc5203f80d43faa601158294a72fa7d8439815c2d0fe60abe62f3c868aad8",
+		"context": "This article is about knife skills. This chunk explains the julienne cut and concludes the article with practice tips."
+	},
+	"article:pan-sauce-basics#0": {
+		"contentHash": "0e1136104f34a3a992d38f8aace8f547980797ab3431bdd2a34702281000f901",
+		"context": "This article is about making a pan sauce in five minutes. This chunk describes what fond is and why it's important for pan sauce."
+	},
+	"article:pan-sauce-basics#1": {
+		"contentHash": "ff68062a011767fff9ec339c5bb2c34365d0e98950c68d7b8ddbb5349a80fb50",
+		"context": "This article is about making a pan sauce in five minutes. This chunk covers the basic ingredients and equipment needed for a pan sauce."
+	},
+	"article:pan-sauce-basics#2": {
+		"contentHash": "1ba5a1e8e6ff30459210b0bbf39e9123b43357c8e04fb16ec59a7bd2a32b54ed",
+		"context": "This article is about making a pan sauce in five minutes. This chunk explains the first step: preparing the pan after cooking the protein."
+	},
+	"article:pan-sauce-basics#3": {
+		"contentHash": "a331823f9fc24212ef046262acddc09b43775ea67ec400fb8b7bde665c3ab8a6",
+		"context": "This article is about making a pan sauce in five minutes. This chunk details the deglazing process using wine or stock to scrape up fond."
+	},
+	"article:pan-sauce-basics#4": {
+		"contentHash": "d7f6d1a58738e092636a4893ff985d1779aebe1abb39a96be3f3bb8a86b84b4a",
+		"context": "This article is about making a pan sauce in five minutes. This chunk explains how to reduce the liquid to concentrate the flavors."
+	},
+	"article:pan-sauce-basics#5": {
+		"contentHash": "999e40e608d8073298a582cb6848c78583de4cfc019567604f13fa954d2dee7d",
+		"context": "This article is about making a pan sauce in five minutes. This chunk describes finishing the sauce by emulsifying cold butter into the reduced liquid."
+	},
+	"article:pan-sauce-basics#6": {
+		"contentHash": "fe91a7364235867931dad381f96f65851e64d5d946bb191a9cfd8983d4cf0eae",
+		"context": "This article is about making a pan sauce in five minutes. This chunk covers serving the finished pan sauce and its impact on a dish."
+	},
+	"article:perfect-stovetop-rice#0": {
+		"contentHash": "2d50d7f360d4a5049f594e2b7c42bd3b4c2129632eabc0f07baeaf10b132fb1a",
+		"context": "The article discusses how to cook perfect stovetop rice. This chunk introduces the topic and mentions the importance of rice as a component in meals."
+	},
+	"article:perfect-stovetop-rice#1": {
+		"contentHash": "45bb65cf12823934f64242d7e27b8fdb40f675d99fb257372d74aeac75ba8e7f",
+		"context": "The article is about cooking perfect stovetop rice. This chunk explains the essential first step of rinsing rice."
+	},
+	"article:perfect-stovetop-rice#2": {
+		"contentHash": "b38f961025d6f9091061c96da4396012a8d7bf693d0e4cff38cb6a67e0a6aa61",
+		"context": "The article provides instructions for cooking perfect stovetop rice. This chunk details how to cook long-grain white rice."
+	},
+	"article:perfect-stovetop-rice#3": {
+		"contentHash": "f8d341ff37b75db0255b7c67088f20540a45cf5b5d4d080fcf387687fb33bbd4",
+		"context": "The article focuses on cooking perfect stovetop rice. This chunk explains how to cook Jasmine rice, noting its specific water ratio."
+	},
+	"article:perfect-stovetop-rice#4": {
+		"contentHash": "108428cf14ba089588c88fa1a3be104bb6dc7ed7dd29e5e5e1c9fb9da0e4cf1c",
+		"context": "The article covers cooking perfect stovetop rice. This chunk provides instructions for cooking brown rice and concludes the article."
+	},
+	"article:plans-and-pricing#0": {
+		"contentHash": "4eb27e100653bc3981bc3256b4373d7aa5ffe669e9a64ba8ec28fe48ac5adab7",
+		"context": "The article is about Mise's plans and pricing. This chunk introduces the company and the purpose of the guide."
+	},
+	"article:plans-and-pricing#1": {
+		"contentHash": "08944465b560a777bcafd53a7318f73de5a3adcd9c6db55d1106e2a4b395b088",
+		"context": "The article is about Mise's plans and pricing. This chunk details the pricing for the 2-person and 4-person meal plans."
+	},
+	"article:plans-and-pricing#2": {
+		"contentHash": "b54b049d985dfa4396269a2f943e2e71cb8292d17a8bbcd9a38df3827123435f",
+		"context": "The article is about Mise's plans and pricing. This chunk explains the flexibility in choosing the number of recipes per week."
+	},
+	"article:plans-and-pricing#3": {
+		"contentHash": "ad853277bcb63b48b1a71d5108e97dc197d4c98242f815d15cdfbd9c18e8180f",
+		"context": "The article is about Mise's plans and pricing. This chunk covers the shipping costs associated with meal kit delivery."
+	},
+	"article:plans-and-pricing#4": {
+		"contentHash": "f363e495bdbbfd66e7867e45ff94d1ccd5c3a8ea0b0b11e8c90564ce34733a8f",
+		"context": "The article is about Mise's plans and pricing. This chunk discusses the additional cost for premium recipes."
+	},
+	"article:plans-and-pricing#5": {
+		"contentHash": "e6b3e13614a850438f2a514f6139f3cdf7aa84cb84abfdcf8346237ef3cb990c",
+		"context": "The article is about Mise's plans and pricing. This chunk describes what ingredients are included in each meal kit and clarifies what is excluded."
+	},
+	"article:safe-internal-temperatures#0": {
+		"contentHash": "f711729635e9d61958015b3c7fd45016c4c66f7d328a50f791960a70825d5e71",
+		"context": "The article \"Safe Internal Cooking Temperatures\" discusses food safety and introduces the importance of an instant-read thermometer for cooking."
+	},
+	"article:safe-internal-temperatures#1": {
+		"contentHash": "de9ba1fc776559d5f3858fb9b6f641186a85ea6aad99dbc3967e3ee35b00bd7a",
+		"context": "This section of the article \"Safe Internal Cooking Temperatures\" explains why reaching specific internal temperatures is crucial for killing bacteria and preventing foodborne illness."
+	},
+	"article:safe-internal-temperatures#2": {
+		"contentHash": "c1ca9b674f47eaa3020ce026c839f649fa5ebe36f33c03eeeef2364ab38540ff",
+		"context": "In \"Safe Internal Cooking Temperatures,\" this chunk provides a general guideline for using an instant-read thermometer to check food temperatures accurately."
+	},
+	"article:safe-internal-temperatures#3": {
+		"contentHash": "909d50df5348327df4d2f8a9191f91ae67b1e3be0b4b68272a5b18cc476e5556",
+		"context": "The article \"Safe Internal Cooking Temperatures\" specifies that poultry should be cooked to an internal temperature of 165°F (74°C) for safety."
+	},
+	"article:safe-internal-temperatures#4": {
+		"contentHash": "22c2e55c1a55a0e8e9f33dd2e8eba01eed1edd52d47b956f6c5be699328aefca",
+		"context": "This part of \"Safe Internal Cooking Temperatures\" details the safe internal cooking temperature for ground meats, which is 160°F (71°C)."
+	},
+	"article:safe-internal-temperatures#5": {
+		"contentHash": "0b19e536d856f6b4b5860a927635fb084a3cbfa55e12e8368539cdb675d321af",
+		"context": "According to \"Safe Internal Cooking Temperatures,\" whole cuts of meat like steaks and roasts should reach 145°F (63°C) and then rest for 3 minutes."
+	},
+	"article:safe-internal-temperatures#6": {
+		"contentHash": "0caf8a4ad4232894bc2ee749e1ed1240ee27d2150d80c3ce7ea5d6f510ed7414",
+		"context": "The article \"Safe Internal Cooking Temperatures\" indicates that fish and shellfish are safely cooked when they reach an internal temperature of 145°F (63°C)."
+	},
+	"article:safe-internal-temperatures#7": {
+		"contentHash": "3d8392bebf7c46d11e16e052c64a2336b5043886deba04009b3aad2b83326246",
+		"context": "This section from \"Safe Internal Cooking Temperatures\" covers the safe cooking temperature for egg dishes, recommending 160°F (71°C)."
+	},
+	"article:safe-internal-temperatures#8": {
+		"contentHash": "672bb850690918a81c2d83cd202186f2046799f134970fa25d935e1fc7c2db15",
+		"context": "The article \"Safe Internal Cooking Temperatures\" advises that leftovers should be reheated to an internal temperature of 165°F (74°C) to ensure safety."
+	},
+	"article:safe-internal-temperatures#9": {
+		"contentHash": "1a422eb7c5b8f2514f2aa58ce5f483ff9137df945c8ec450d2be306ab81c13f2",
+		"context": "This concluding chunk of \"Safe Internal Cooking Temperatures\" reiterates the value of an instant-read thermometer for achieving safe and confident cooking."
+	},
+	"article:skip-or-pause#0": {
+		"contentHash": "b2ba751cb35e70329fd16c4196538acc8ef7beee3f738b5c93cb8e73d0b55404",
+		"context": "The article 'Skipping a Week or Pausing Your Subscription' explains how Mise meal kit deliveries offer flexibility. This first chunk introduces the concept of adjusting deliveries to fit your schedule."
+	},
+	"article:skip-or-pause#1": {
+		"contentHash": "ff260590d136e2263b740f811a5d982d696e5c09a811bd0dfb801ed7fca1c842",
+		"context": "The article 'Skipping a Week or Pausing Your Subscription' details how to manage your deliveries. This chunk focuses specifically on the process and deadline for skipping a single week."
+	},
+	"article:skip-or-pause#2": {
+		"contentHash": "4ed34e054fba0b2b0f9e395184175e6bdb138c547b8bd1b522182abf54019e0a",
+		"context": "The article 'Skipping a Week or Pausing Your Subscription' provides options for longer breaks. This chunk explains how to pause your subscription for an extended period and its associated cutoff."
+	},
+	"article:storing-your-mise-box#0": {
+		"contentHash": "03cfb738fa1b5b13071c476027cb74084e403d49fbd50eeba9d27bbabdfc501a",
+		"context": "Storing Your Mise Box: This introductory chunk explains the importance of proper ingredient storage for freshness and safety."
+	},
+	"article:storing-your-mise-box#1": {
+		"contentHash": "be93b562c1af1bb34fb85f0018c739ae61fed7121a6ab5bd13dabac4f00edc55",
+		"context": "Storing Your Mise Box: This chunk details the immediate action required upon receiving the box, emphasizing unpacking within 2 hours."
+	},
+	"article:storing-your-mise-box#2": {
+		"contentHash": "03f4b23f062b44ec488cd2165ee6216e6e94840dc18b8d28492a9487c31bbcd4",
+		"context": "Storing Your Mise Box: This chunk provides general guidance on where to store unpacked ingredients, differentiating between refrigeration and pantry storage."
+	},
+	"article:storing-your-mise-box#3": {
+		"contentHash": "7c2203be39d6d7b9812545613a3e786fe5c99d924be7d39b8166534ed8a92862",
+		"context": "Storing Your Mise Box: This chunk focuses on the specific storage and handling guidelines for proteins, including recommended cooking timelines and freezing options."
+	},
+	"article:storing-your-mise-box#4": {
+		"contentHash": "76335b2c71c1091e072c98ddb172cc5826738272c31812aea04e52ab4fab0095",
+		"context": "Storing Your Mise Box: This chunk covers the storage recommendations for fresh produce, advising on usage within 5 days and optimal storage locations."
+	},
+	"article:storing-your-mise-box#5": {
+		"contentHash": "b51ff181de73e42f51dba20155decace798aa6243f255b51a33030edb9f66762",
+		"context": "Storing Your Mise Box: This concluding chunk summarizes the benefits of following storage tips and reinforces the importance of food safety in home cooking."
+	},
+	"article:swap-recipes#0": {
+		"contentHash": "22964597e8d04b7500cbe436cd43d4b4f2c44d2cea42a6c417efb1f4bcb0ecd2",
+		"context": "The article \"Swapping Recipes and Adding Extras\" introduces the ability to personalize weekly meal kits, with this chunk providing a general overview."
+	},
+	"article:swap-recipes#1": {
+		"contentHash": "36aff6c0044a1bb4642afa767d73df00645a9c435b35b4e6e326cce458189012",
+		"context": "This chunk from \"Swapping Recipes and Adding Extras\" details how to swap recipes from the weekly menu and mentions the cutoff time for changes."
+	},
+	"article:swap-recipes#2": {
+		"contentHash": "fe544647352937733a437618d0e3f83b2ed71d4f673db21d45aa33f09e81c499",
+		"context": "This section of \"Swapping Recipes and Adding Extras\" elaborates on recipe swapping, including information about premium recipe options and their associated costs."
+	},
+	"article:swap-recipes#3": {
+		"contentHash": "1c3645a512c0b572b2853ad703986009bc5e336729f29f10f67cc2e4e954268d",
+		"context": "This final chunk of \"Swapping Recipes and Adding Extras\" explains how to add extra recipes to an order and the pricing for these additions."
+	},
+	"article:thawing-safely#0": {
+		"contentHash": "c6f5467618bd709dcaad051009aa1802df692a899fd283ad02f9d82ccebfc4f3",
+		"context": "The article \"Thawing Frozen Proteins Safely\" introduces the importance of proper thawing and this chunk provides a general introduction."
+	},
+	"article:thawing-safely#1": {
+		"contentHash": "7aca4b7625d1ca9bde501a31921b6c76d33bdfb273934e78293cc218b4b8ac44",
+		"context": "This chunk from \"Thawing Frozen Proteins Safely\" explains the safest method for thawing proteins: refrigerator thawing."
+	},
+	"article:thawing-safely#2": {
+		"contentHash": "c33152a01ea7980a4c97f95ed3793162342244daf6c86a8ce6066d92e9aec803",
+		"context": "This chunk from \"Thawing Frozen Proteins Safely\" details an alternative method for thawing proteins quickly using cold water."
+	},
+	"article:thawing-safely#3": {
+		"contentHash": "92976d07145027e28641e0c751c35b488761525391f4dc82e706c15635a45d13",
+		"context": "This chunk from \"Thawing Frozen Proteins Safely\" describes how to use a microwave for rapid protein thawing."
+	},
+	"article:thawing-safely#4": {
+		"contentHash": "b7db580041b287072cc30913ed60c63d42dc813408d2562e518c6e17e80b7005",
+		"context": "This chunk from \"Thawing Frozen Proteins Safely\" warns against unsafe thawing methods like thawing on the counter and summarizes the article's advice."
+	}
+}

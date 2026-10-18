@@ -28,7 +28,7 @@ export function Tags({
 	variant?: "secondary" | "destructive" | "outline";
 }) {
 	if (values.length === 0) {
-		return <span className="text-muted-foreground">—</span>;
+		return <span className="text-muted-foreground">-</span>;
 	}
 	return (
 		<div className="flex flex-wrap gap-1">

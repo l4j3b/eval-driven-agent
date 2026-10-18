@@ -79,9 +79,9 @@ Reranking improves the order but isn't needed to answer, so it has a 5-second ti
 
 ## Bugs this phase caught
 
-- **An article that produced zero chunks.** The generator returned one article with every line break missing, and the chunker read the whole body as a single heading. Nothing failed; the article was just never searchable. Fixes: the chunker keeps over-long "headings" as text, the generator checks markdown structure and retries, and the indexer warns when an article yields no chunks. The lesson for interviews: retrieval failures are usually silent, which is why retrieval needs its own evals.
+- **An article that produced zero chunks.** The generator returned one article with every line break missing, and the chunker read the whole body as a single heading. Nothing failed; the article was just never searchable. Fixes: the chunker keeps over-long "headings" as text, the generator checks markdown structure and retries, and the indexer warns when an article yields no chunks. The lesson: retrieval failures are usually silent, which is why retrieval needs its own evals.
 
-## Interview questions this prepares you for
+## Questions this answers
 
 - **How do you choose a chunk size?** Follow the document's structure first; keep chunks small enough to be specific and big enough to stand alone; measure with retrieval evals (phase 5) instead of guessing.
 - **Why hybrid search?** Embeddings miss exact rare terms and keyword search misses meaning; fusing them is cheap and consistently better than either.

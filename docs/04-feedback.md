@@ -67,7 +67,7 @@ Langfuse's UI can also add any trace to a dataset directly. The in-app page exis
 2. Thumbs-down with a note. The score appeared on that trace in Langfuse (`user-feedback`, 0, with the note).
 3. Feedback page → "Add to eval dataset" with criteria. The dataset item appeared in `mise-agent-evals`, linked to the trace.
 
-## Interview questions this prepares you for
+## Questions this answers
 
 - **How do you collect feedback on an LLM product?** Explicit (thumbs, notes) attached to the exact trace, plus implicit signals (retries, abandoned chats, escalations). Keep feedback tied to the prompt version so you can compare versions.
 - **How do production failures turn into tests?** A review queue: a human confirms the failure and writes what good looks like; the case joins the eval dataset and gates every future change.

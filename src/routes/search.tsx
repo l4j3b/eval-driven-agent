@@ -393,8 +393,8 @@ function SearchPage() {
 													)}
 													{column.key === "hybrid" && hit.ranks && (
 														<Badge variant="secondary">
-															vector {hit.ranks[0] ? `#${hit.ranks[0]}` : "—"} ·
-															keyword {hit.ranks[1] ? `#${hit.ranks[1]}` : "—"}
+															vector {hit.ranks[0] ? `#${hit.ranks[0]}` : "-"} ·
+															keyword {hit.ranks[1] ? `#${hit.ranks[1]}` : "-"}
 														</Badge>
 													)}
 													{column.key === "reranked" && hit.previousRank && (

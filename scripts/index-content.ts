@@ -7,17 +7,20 @@
 // Re-running is cheap: a chunk is only re-embedded when the text it embeds
 // changed, and an article's contexts are only rewritten when its chunks did.
 // Work is saved article by article, so a failure halfway loses nothing.
+//
+// Contexts are also kept in data/chunk-contexts.json (committed), so a fresh
+// database reuses them instead of making one rate-limited LLM call per article.
 import "#/server/telemetry";
 
 import { createHash } from "node:crypto";
+import { readFile, writeFile } from "node:fs/promises";
 import { setTimeout as wait } from "node:timers/promises";
 
 import { generateText, Output } from "ai";
 import { asc, notInArray, sql } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
 import { z } from "zod";
 
+import { sql as client, db } from "#/db/client";
 import * as schema from "#/db/schema";
 import {
 	type ChunkDraft,
@@ -34,13 +37,20 @@ const EMBED_BATCH = 50;
 // The gateway's free tier allows 5 requests a minute for Flash-Lite.
 const CONTEXT_CALL_INTERVAL_MS = 13_000;
 
-const client = postgres(process.env.DATABASE_URL as string, {
-	max: 2,
-	onnotice: () => {},
-});
-const db = drizzle(client, { schema, casing: "snake_case" });
+const CONTEXTS_FILE = "data/chunk-contexts.json";
 
 const hash = (text: string) => createHash("sha256").update(text).digest("hex");
+
+// Chunk id → its context, with a hash of the content it was written for.
+type SavedContexts = Record<string, { contentHash: string; context: string }>;
+
+async function readSavedContexts(): Promise<SavedContexts> {
+	try {
+		return JSON.parse(await readFile(CONTEXTS_FILE, "utf8"));
+	} catch {
+		return {};
+	}
+}
 
 type Article = typeof schema.articles.$inferSelect;
 type Existing = {
@@ -156,6 +166,7 @@ async function main() {
 				.from(schema.chunks),
 		]);
 	const previous = new Map(existing.map((row) => [row.id, row]));
+	const saved = await readSavedContexts();
 	const ingredientName = new Map(ingredients.map((row) => [row.id, row.name]));
 
 	// Recipes: self-contained chunks with the title in the header, no context needed.
@@ -191,9 +202,10 @@ async function main() {
 		articleDrafts.push(...drafts);
 		const reusable = drafts.map((draft) => {
 			const before = previous.get(draft.id);
-			return before?.context && before.content === draft.content
-				? before.context
-				: null;
+			if (before?.context && before.content === draft.content)
+				return before.context;
+			const file = saved[draft.id];
+			return file?.contentHash === hash(draft.content) ? file.context : null;
 		});
 		let contexts: (string | null)[] = drafts.map(() => null);
 		if (withContext && reusable.every(Boolean)) {
@@ -219,6 +231,22 @@ async function main() {
 			),
 		)
 		.returning({ id: schema.chunks.id });
+
+	// Keep the contexts file in step with the database.
+	const contexts = await db
+		.select({
+			id: schema.chunks.id,
+			content: schema.chunks.content,
+			context: schema.chunks.context,
+		})
+		.from(schema.chunks)
+		.orderBy(asc(schema.chunks.id));
+	const file: SavedContexts = {};
+	for (const row of contexts) {
+		if (row.context)
+			file[row.id] = { contentHash: hash(row.content), context: row.context };
+	}
+	await writeFile(CONTEXTS_FILE, `${JSON.stringify(file, null, "\t")}\n`);
 
 	const total = recipeDrafts.length + articleDrafts.length;
 	console.log(

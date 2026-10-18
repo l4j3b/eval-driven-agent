@@ -52,7 +52,7 @@ The traps are described only in UI code (`src/lib/data-notes.ts`), never in the 
 - Each message is a `UIMessage` stored as jsonb. Tool calls, citations and reasoning will round-trip later without schema changes.
 - The sidebar is the root route's loader. A finished reply calls `router.invalidate()` on the root route only, so the history refreshes without reloading the chat.
 
-## Interview questions this prepares you for
+## Questions this answers
 
 - **How do you bootstrap data and evals before you have users?** Synthetic data from an LLM with structured output, validated in code, with known facts planted so answers can be checked.
 - **Why validate LLM-generated data?** Structured output guarantees the shape, not the truth. Cross-field rules (allergens vs diet tags) catch contradictions cheaply.

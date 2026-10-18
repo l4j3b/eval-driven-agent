@@ -441,7 +441,7 @@ function Customers({
 											0,
 										),
 									)
-								: "—"}
+								: "-"}
 						</TableCell>
 					</TableRow>
 				))}
@@ -487,10 +487,10 @@ function Orders({
 							</Badge>
 						</TableCell>
 						<TableCell className="max-w-96 whitespace-normal text-muted-foreground text-xs">
-							{order.items.map((item) => item.title).join(" · ") || "—"}
+							{order.items.map((item) => item.title).join(" · ") || "-"}
 						</TableCell>
 						<TableCell className="text-right">
-							{order.subtotal > 0 ? money(order.subtotal) : "—"}
+							{order.subtotal > 0 ? money(order.subtotal) : "-"}
 						</TableCell>
 					</TableRow>
 				))}

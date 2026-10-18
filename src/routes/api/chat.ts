@@ -7,7 +7,6 @@ import {
 	createIdGenerator,
 	createUIMessageStreamResponse,
 	isToolUIPart,
-	streamText,
 	toUIMessageStream,
 	type UIMessage,
 	validateUIMessages,
@@ -15,7 +14,7 @@ import {
 import { z } from "zod";
 
 import type { MessageMetadata } from "#/lib/evals";
-import { prepareAgent } from "#/server/agent/agent";
+import { createAgent } from "#/server/agent/agent";
 import {
 	CHAT_ID,
 	chatOwner,
@@ -132,14 +131,14 @@ export const Route = createFileRoute("/api/chat")({
 					latest,
 				];
 
-				const agent = await prepareAgent({
+				const mise = await createAgent({
 					customerId,
 					chatId: id,
 					history,
 				});
 				const messages = await validateUIMessages({
 					messages: history,
-					tools: agent.tools,
+					tools: mise.tools,
 				});
 				await saveMessages(id, [latest], customerId);
 				const question = textOf(
@@ -155,8 +154,8 @@ export const Route = createFileRoute("/api/chat")({
 						userId: customerId ?? "guest",
 						tags: ["chat"],
 						metadata: {
-							promptVersion: String(agent.prompt.langfusePrompt.version),
-							model: agent.modelId,
+							promptVersion: String(mise.prompt.langfusePrompt.version),
+							model: mise.modelId,
 						},
 					},
 					() =>
@@ -164,10 +163,9 @@ export const Route = createFileRoute("/api/chat")({
 							"chat-turn",
 							async (turn) => {
 								turn.update({ input: question });
-								const result = streamText({
-									...agent.settings,
+								const result = await mise.agent.stream({
 									messages: await convertToModelMessages(messages, {
-										tools: agent.tools,
+										tools: mise.tools,
 									}),
 								});
 
