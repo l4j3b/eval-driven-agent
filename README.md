@@ -215,3 +215,7 @@ Then [the results](docs/results.md): what the evals measured, version by version
 - **A small test split.** 13 held-out cases; the gate averages repeated runs, but more cases would make its decisions sharper.
 - **One candidate per iteration.** Frameworks like DSPy and GEPA search over many candidates; this loop shows the mechanics with one.
 - **Simulated sign-in.** The customer picker stands in for real authentication.
+
+## License
+
+[MIT](LICENSE)
