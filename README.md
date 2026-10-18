@@ -1,4 +1,4 @@
-# Agent Lab
+# Eval-Driven Agent
 
 A small but complete LLM agent system, built end to end: retrieval-augmented generation, tools over a database, prompt management, tracing, evals, and a self-improving loop that only ships changes the evals can prove.
 

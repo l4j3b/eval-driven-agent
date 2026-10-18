@@ -1,5 +1,5 @@
 {
-  "name": "agent-lab",
+  "name": "eval-driven-agent",
   "private": true,
   "type": "module",
   "imports": {

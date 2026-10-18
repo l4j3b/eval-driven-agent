@@ -78,7 +78,7 @@ export function AppSidebar({
 								<div className="grid leading-tight">
 									<span className="font-semibold">Mise</span>
 									<span className="text-muted-foreground text-xs">
-										Agent Lab
+										Eval-driven agent
 									</span>
 								</div>
 							</Link>

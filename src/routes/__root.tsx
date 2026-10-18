@@ -35,7 +35,7 @@ export const Route = createRootRoute({
 				content: "width=device-width, initial-scale=1",
 			},
 			{
-				title: "Mise · Agent Lab",
+				title: "Mise · Eval-driven agent",
 			},
 			{
 				name: "description",
