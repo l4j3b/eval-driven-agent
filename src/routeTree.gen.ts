@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as DataRouteImport } from './routes/data'
 import { Route as EvalsRouteImport } from './routes/evals'
 import { Route as FeedbackRouteImport } from './routes/feedback'
+import { Route as ImproveRouteImport } from './routes/improve'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ChatChatIdRouteImport } from './routes/chat.$chatId'
@@ -37,6 +38,11 @@ const FeedbackRoute = FeedbackRouteImport.update({
   path: '/feedback',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ImproveRoute = ImproveRouteImport.update({
+  id: '/improve',
+  path: '/improve',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/data': typeof DataRoute
   '/evals': typeof EvalsRoute
   '/feedback': typeof FeedbackRoute
+  '/improve': typeof ImproveRoute
   '/search': typeof SearchRoute
   '/api/chat': typeof ApiChatRoute
   '/chat/$chatId': typeof ChatChatIdRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/data': typeof DataRoute
   '/evals': typeof EvalsRoute
   '/feedback': typeof FeedbackRoute
+  '/improve': typeof ImproveRoute
   '/search': typeof SearchRoute
   '/api/chat': typeof ApiChatRoute
   '/chat/$chatId': typeof ChatChatIdRoute
@@ -77,6 +85,7 @@ export interface FileRoutesById {
   '/data': typeof DataRoute
   '/evals': typeof EvalsRoute
   '/feedback': typeof FeedbackRoute
+  '/improve': typeof ImproveRoute
   '/search': typeof SearchRoute
   '/api/chat': typeof ApiChatRoute
   '/chat/$chatId': typeof ChatChatIdRoute
@@ -88,6 +97,7 @@ export interface FileRouteTypes {
     | '/data'
     | '/evals'
     | '/feedback'
+    | '/improve'
     | '/search'
     | '/api/chat'
     | '/chat/$chatId'
@@ -97,6 +107,7 @@ export interface FileRouteTypes {
     | '/data'
     | '/evals'
     | '/feedback'
+    | '/improve'
     | '/search'
     | '/api/chat'
     | '/chat/$chatId'
@@ -106,6 +117,7 @@ export interface FileRouteTypes {
     | '/data'
     | '/evals'
     | '/feedback'
+    | '/improve'
     | '/search'
     | '/api/chat'
     | '/chat/$chatId'
@@ -116,6 +128,7 @@ export interface RootRouteChildren {
   DataRoute: typeof DataRoute
   EvalsRoute: typeof EvalsRoute
   FeedbackRoute: typeof FeedbackRoute
+  ImproveRoute: typeof ImproveRoute
   SearchRoute: typeof SearchRoute
   ApiChatRoute: typeof ApiChatRoute
   ChatChatIdRoute: typeof ChatChatIdRoute
@@ -151,6 +164,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FeedbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/improve': {
+      id: '/improve'
+      path: '/improve'
+      fullPath: '/improve'
+      preLoaderRoute: typeof ImproveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search': {
       id: '/search'
       path: '/search'
@@ -180,6 +200,7 @@ const rootRouteChildren: RootRouteChildren = {
   DataRoute: DataRoute,
   EvalsRoute: EvalsRoute,
   FeedbackRoute: FeedbackRoute,
+  ImproveRoute: ImproveRoute,
   SearchRoute: SearchRoute,
   ApiChatRoute: ApiChatRoute,
   ChatChatIdRoute: ChatChatIdRoute,

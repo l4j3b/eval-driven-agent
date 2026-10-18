@@ -10,6 +10,7 @@ import {
 	DatabaseIcon,
 	FlaskConicalIcon,
 	SearchIcon,
+	SparklesIcon,
 	SquarePenIcon,
 	ThumbsUpIcon,
 	Trash2Icon,
@@ -37,6 +38,7 @@ export type ChatSummary = { id: string; title: string; updatedAt: Date };
 const PAGES = [
 	{ to: "/search", label: "Search", icon: SearchIcon },
 	{ to: "/evals", label: "Evals", icon: FlaskConicalIcon },
+	{ to: "/improve", label: "Improve", icon: SparklesIcon },
 	{ to: "/feedback", label: "Feedback", icon: ThumbsUpIcon },
 	{ to: "/data", label: "Data", icon: DatabaseIcon },
 ] as const;

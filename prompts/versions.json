@@ -1,0 +1,54 @@
+[
+	{
+		"version": 1,
+		"file": "v1.md",
+		"labels": [],
+		"commitMessage": "From src/lib/prompts.ts",
+		"config": {}
+	},
+	{
+		"version": 2,
+		"file": "v2.md",
+		"labels": [],
+		"commitMessage": "Hand-tuned: act on credits, focused allergy warnings, check account status",
+		"config": {}
+	},
+	{
+		"version": 3,
+		"file": "v3.md",
+		"labels": [
+			"proposed"
+		],
+		"commitMessage": "Optimizer from v1: The instruction on keeping answers short and practical was modified to emphasize including all relevant details, particularly for safety.; The citation rule was strengthened to clarify that only specific source numbers directly supporting a fact should be cited.; A new rule was added under 'Policies and actions' to explicitly state that tools must always be called for actions, and to handle situations where actions exceed automatic limits by offering support review instead of ",
+		"config": {
+			"source": "optimizer",
+			"baseVersion": 1,
+			"changes": [
+				"The instruction on keeping answers short and practical was modified to emphasize including all relevant details, particularly for safety.",
+				"The citation rule was strengthened to clarify that only specific source numbers directly supporting a fact should be cited.",
+				"A new rule was added under 'Policies and actions' to explicitly state that tools must always be called for actions, and to handle situations where actions exceed automatic limits by offering support review instead of calling the limited action tool."
+			]
+		}
+	},
+	{
+		"version": 4,
+		"file": "v4.md",
+		"labels": [
+			"candidate"
+		],
+		"commitMessage": "Hand-tuned from the v1-v3 analysis: look things up before asking, act on credits, search for allergy-safe versions, say how to check food safety",
+		"config": {}
+	},
+	{
+		"version": 5,
+		"file": "v5.md",
+		"labels": [
+			"production",
+			"sonnet-candidate"
+		],
+		"commitMessage": "v4's text on Claude Sonnet 5.5 (model comparison)",
+		"config": {
+			"model": "anthropic/claude-sonnet-5.5"
+		}
+	}
+]
