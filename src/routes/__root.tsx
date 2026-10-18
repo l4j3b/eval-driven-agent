@@ -9,6 +9,7 @@ import { AppSidebar } from "#/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "#/components/ui/sidebar";
 import { TooltipProvider } from "#/components/ui/tooltip";
 import { listChats } from "#/server/chats";
+import { getLangfuseUrl } from "#/server/langfuse";
 import { getSession } from "#/server/session";
 
 import appCss from "../styles.css?url";
@@ -17,8 +18,12 @@ export const Route = createRootRoute({
 	// The sidebar: who's signed in, and their chat history. Chats call
 	// router.invalidate() to refresh it.
 	loader: async () => {
-		const [chats, session] = await Promise.all([listChats(), getSession()]);
-		return { chats, session };
+		const [chats, session, langfuseUrl] = await Promise.all([
+			listChats(),
+			getSession(),
+			getLangfuseUrl(),
+		]);
+		return { chats, session, langfuseUrl };
 	},
 	head: () => ({
 		meta: [
@@ -55,10 +60,10 @@ export const Route = createRootRoute({
 });
 
 function RootLayout() {
-	const { chats, session } = Route.useLoaderData();
+	const { chats, session, langfuseUrl } = Route.useLoaderData();
 	return (
 		<SidebarProvider>
-			<AppSidebar chats={chats} session={session} />
+			<AppSidebar chats={chats} langfuseUrl={langfuseUrl} session={session} />
 			<SidebarInset className="h-dvh overflow-hidden">
 				<Outlet />
 			</SidebarInset>

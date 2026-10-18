@@ -1,0 +1,84 @@
+{
+	"runName": "v1 · all · 2026-10-18T03:53",
+	"split": "all",
+	"scorerVersion": 2,
+	"prompt": {
+		"version": 1,
+		"resolvedVersion": 1
+	},
+	"models": {
+		"agent": "google/gemini-2.5-flash",
+		"judge": "google/gemini-2.5-flash"
+	},
+	"startedAt": "2026-10-18T03:53:12.516Z",
+	"finishedAt": "2026-10-18T03:53:53.971Z",
+	"datasetRunUrl": "http://localhost:3000/project/agent-lab/experiments/results?baseline=e3860a6c05ae16be",
+	"cases": [
+		{
+			"id": "credit-already-credited-box",
+			"category": "actions",
+			"split": "train",
+			"source": "seed",
+			"question": "The pad see ew in my latest box was missing the tofu. Can I get a credit?",
+			"transcript": [
+				{
+					"role": "user",
+					"text": "The pad see ew in my latest box was missing the tofu. Can I get a credit?"
+				}
+			],
+			"criteria": "Attempts the credit for Pad See Ew with Tofu in order ord_0026. Explains it's above the $25 automatic limit (the box already has a $20 credit, and 4 servings come to $37.96) and offers or opens a support review. Never claims a credit was issued.",
+			"pass": true,
+			"scores": {
+				"phrases": 1,
+				"credit": 1,
+				"correctness": 1,
+				"faithfulness": 1,
+				"pass": 1
+			},
+			"comments": {
+				"phrases": "all present",
+				"credit": "attempted pad-see-ew-with-tofu on ord_0026: denied (This credit would be $37.96 on top of $20.00 already credited for this box, above the $25 automatic limit per box. Offer to open a support review instead.)",
+				"correctness": "5/5: The assistant correctly identified the order and recipe, attempted to issue a credit which was denied due to exceeding the automatic limit and a prior credit, and then explained the situation to the user, offering to open a support review. This perfectly matches all points in the criteria.",
+				"faithfulness": "5/5: All numerical values ($37.96, $25, $20.00) and the reason for denial (exceeding automatic limit, prior credit) are directly quoted from the `issueCredit` tool's denied message. The offer to open a support review is consistent with the instructions when a credit is denied due to limits.",
+				"pass": "passed"
+			},
+			"answer": "It looks like your credit for the missing tofu would be $37.96, which exceeds the $25 per box automatic credit limit. There was also a previous credit of $20.00 for this order.\n\nI can open a case with our support team to review this for you. They will get back to you within 1 business day. Would you like me to do that?",
+			"toolCalls": [
+				{
+					"name": "getMyOrders",
+					"outcome": "executed"
+				},
+				{
+					"name": "issueCredit",
+					"outcome": "denied"
+				}
+			],
+			"latencyMs": 26143,
+			"traceId": "882f4b36ac80d78533407c2f5388e998"
+		}
+	],
+	"summary": {
+		"cases": 1,
+		"errors": 0,
+		"passRate": 1,
+		"means": {
+			"phrases": 1,
+			"credit": 1,
+			"correctness": 1,
+			"faithfulness": 1,
+			"pass": 1
+		},
+		"byCategory": {
+			"actions": {
+				"cases": 1,
+				"passRate": 1
+			}
+		},
+		"bySplit": {
+			"train": {
+				"cases": 1,
+				"passRate": 1
+			}
+		}
+	}
+}

@@ -1,0 +1,88 @@
+{
+	"runName": "v2 · all · 2026-10-18T03:55",
+	"split": "all",
+	"scorerVersion": 2,
+	"prompt": {
+		"version": 2,
+		"resolvedVersion": 2
+	},
+	"models": {
+		"agent": "google/gemini-2.5-flash",
+		"judge": "google/gemini-2.5-flash"
+	},
+	"startedAt": "2026-10-18T03:55:22.094Z",
+	"finishedAt": "2026-10-18T03:56:15.574Z",
+	"datasetRunUrl": "http://localhost:3000/project/agent-lab/experiments/results?baseline=7fc6426a307e9119",
+	"cases": [
+		{
+			"id": "credit-already-credited-box",
+			"category": "actions",
+			"split": "train",
+			"source": "seed",
+			"question": "The pad see ew in my latest box was missing the tofu. Can I get a credit?",
+			"transcript": [
+				{
+					"role": "user",
+					"text": "The pad see ew in my latest box was missing the tofu. Can I get a credit?"
+				}
+			],
+			"criteria": "Attempts the credit for Pad See Ew with Tofu in order ord_0026. Explains it's above the $25 automatic limit (the box already has a $20 credit, and 4 servings come to $37.96) and offers or opens a support review. Never claims a credit was issued.",
+			"pass": true,
+			"scores": {
+				"phrases": 1,
+				"credit": 1,
+				"correctness": 1,
+				"faithfulness": 1,
+				"pass": 1
+			},
+			"comments": {
+				"phrases": "all present",
+				"credit": "attempted pad-see-ew-with-tofu on ord_0026: denied (This credit would be $37.96 on top of $20.00 already credited for this box, above the $25 automatic limit per box. Offer to open a support review instead.)",
+				"correctness": "5/5: The assistant correctly identified the order that contained the 'Pad See Ew with Tofu' from the `getMyOrders` output after the first `issueCredit` attempt failed. It then attempted to issue the credit using the correct order ID and recipe ID. When the credit was denied due to exceeding the automatic limit, the assistant accurately explained the reason for the denial and offered to open a support review, exactly as specified in the instructions. It did not claim a credit was issued.",
+				"faithfulness": "5/5: All statements made by the assistant are directly supported by the outcomes of the tool calls or by the assistant's instructions. The specific reason for the credit denial (exceeding the $25 limit) is taken directly from the `issueCredit` tool output.",
+				"pass": "passed"
+			},
+			"answer": "I can't issue this credit automatically because it would exceed the $25 limit for this box. I can open a case with our support team to review this for you. Would you like me to do that?",
+			"toolCalls": [
+				{
+					"name": "issueCredit",
+					"outcome": "denied"
+				},
+				{
+					"name": "getMyOrders",
+					"outcome": "executed"
+				},
+				{
+					"name": "issueCredit",
+					"outcome": "denied"
+				}
+			],
+			"latencyMs": 38055,
+			"traceId": "62744586c5c70a5896d43062421b7a22"
+		}
+	],
+	"summary": {
+		"cases": 1,
+		"errors": 0,
+		"passRate": 1,
+		"means": {
+			"phrases": 1,
+			"credit": 1,
+			"correctness": 1,
+			"faithfulness": 1,
+			"pass": 1
+		},
+		"byCategory": {
+			"actions": {
+				"cases": 1,
+				"passRate": 1
+			}
+		},
+		"bySplit": {
+			"train": {
+				"cases": 1,
+				"passRate": 1
+			}
+		}
+	}
+}

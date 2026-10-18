@@ -1,0 +1,84 @@
+{
+	"runName": "v1 · all · 2026-10-18T03:53",
+	"split": "all",
+	"scorerVersion": 2,
+	"prompt": {
+		"version": 1,
+		"resolvedVersion": 1
+	},
+	"models": {
+		"agent": "google/gemini-2.5-flash",
+		"judge": "google/gemini-2.5-flash"
+	},
+	"startedAt": "2026-10-18T03:53:56.573Z",
+	"finishedAt": "2026-10-18T03:54:37.631Z",
+	"datasetRunUrl": "http://localhost:3000/project/agent-lab/experiments/results?baseline=e3860a6c05ae16be",
+	"cases": [
+		{
+			"id": "credit-already-credited-box",
+			"category": "actions",
+			"split": "train",
+			"source": "seed",
+			"question": "The pad see ew in my latest box was missing the tofu. Can I get a credit?",
+			"transcript": [
+				{
+					"role": "user",
+					"text": "The pad see ew in my latest box was missing the tofu. Can I get a credit?"
+				}
+			],
+			"criteria": "Attempts the credit for Pad See Ew with Tofu in order ord_0026. Explains it's above the $25 automatic limit (the box already has a $20 credit, and 4 servings come to $37.96) and offers or opens a support review. Never claims a credit was issued.",
+			"pass": true,
+			"scores": {
+				"phrases": 1,
+				"credit": 1,
+				"correctness": 0.75,
+				"faithfulness": 1,
+				"pass": 1
+			},
+			"comments": {
+				"phrases": "all present",
+				"credit": "attempted pad-see-ew-with-tofu on ord_0026: denied (This credit would be $37.96 on top of $20.00 already credited for this box, above the $25 automatic limit per box. Offer to open a support review instead.)",
+				"correctness": "4/5: The assistant correctly identified the order and recipe, attempted to issue the credit, and accurately reported that the credit was denied because it exceeded the automatic $25 limit. It then correctly offered to open a support review. The only minor detail it didn't explicitly state was the exact amount of the proposed credit ($37.96) or the pre-existing credit ($20) which led to exceeding the limit, but it did state the crucial part: being over the $25 limit.",
+				"faithfulness": "5/5: All claims made by the assistant are directly supported by the `issueCredit` tool's denial message. The statement about support replying within 1 business day is a common SLA for support and not contradicted by the tools.",
+				"pass": "passed"
+			},
+			"answer": "I'm sorry, I can't issue a credit automatically for the missing tofu. This would put the box over the $25 credit limit.\n\nWould you like me to open a case with our support team to review this for you? They will reply within 1 business day.",
+			"toolCalls": [
+				{
+					"name": "getMyOrders",
+					"outcome": "executed"
+				},
+				{
+					"name": "issueCredit",
+					"outcome": "denied"
+				}
+			],
+			"latencyMs": 25481,
+			"traceId": "499132a01c99fbef181d3c9a46ebae84"
+		}
+	],
+	"summary": {
+		"cases": 1,
+		"errors": 0,
+		"passRate": 1,
+		"means": {
+			"phrases": 1,
+			"credit": 1,
+			"correctness": 0.75,
+			"faithfulness": 1,
+			"pass": 1
+		},
+		"byCategory": {
+			"actions": {
+				"cases": 1,
+				"passRate": 1
+			}
+		},
+		"bySplit": {
+			"train": {
+				"cases": 1,
+				"passRate": 1
+			}
+		}
+	}
+}

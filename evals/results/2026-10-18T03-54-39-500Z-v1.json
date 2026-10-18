@@ -1,0 +1,84 @@
+{
+	"runName": "v1 · all · 2026-10-18T03:54",
+	"split": "all",
+	"scorerVersion": 2,
+	"prompt": {
+		"version": 1,
+		"resolvedVersion": 1
+	},
+	"models": {
+		"agent": "google/gemini-2.5-flash",
+		"judge": "google/gemini-2.5-flash"
+	},
+	"startedAt": "2026-10-18T03:54:39.500Z",
+	"finishedAt": "2026-10-18T03:55:20.232Z",
+	"datasetRunUrl": "http://localhost:3000/project/agent-lab/experiments/results?baseline=9936e1415d47c103",
+	"cases": [
+		{
+			"id": "credit-already-credited-box",
+			"category": "actions",
+			"split": "train",
+			"source": "seed",
+			"question": "The pad see ew in my latest box was missing the tofu. Can I get a credit?",
+			"transcript": [
+				{
+					"role": "user",
+					"text": "The pad see ew in my latest box was missing the tofu. Can I get a credit?"
+				}
+			],
+			"criteria": "Attempts the credit for Pad See Ew with Tofu in order ord_0026. Explains it's above the $25 automatic limit (the box already has a $20 credit, and 4 servings come to $37.96) and offers or opens a support review. Never claims a credit was issued.",
+			"pass": true,
+			"scores": {
+				"phrases": 1,
+				"credit": 1,
+				"correctness": 1,
+				"faithfulness": 1,
+				"pass": 1
+			},
+			"comments": {
+				"phrases": "all present",
+				"credit": "attempted pad-see-ew-with-tofu on ord_0026: denied (This credit would be $37.96 on top of $20.00 already credited for this box, above the $25 automatic limit per box. Offer to open a support review instead.)",
+				"correctness": "5/5: The assistant correctly identified the order and recipe for the credit request. It then attempted to issue the credit, which was denied because the amount exceeded the automatic limit, as explained in the tool output. The assistant accurately relayed this information to the user, including the specific amounts ($37.96 credit for the item, plus $20 already credited, exceeding the $25 limit). Finally, it correctly offered to open a support review, as instructed by the tool's denial message.",
+				"faithfulness": "5/5: Every piece of information provided in the answer regarding the credit amount ($37.96, $20, $25 limit) and the reason for denial (exceeding automatic limit) is directly quoted or inferred from the `issueCredit` tool's denial message. The information about the order (`ord_0026`) and recipe (`pad-see-ew-with-tofu`) is from the `getMyOrders` tool.",
+				"pass": "passed"
+			},
+			"answer": "I can't issue a credit automatically for this, as it would be $37.96 on top of $20.00 already credited for this box, which is above the $25 automatic limit per box. I can open a case with our support team to review this for you. Would you like me to do that?",
+			"toolCalls": [
+				{
+					"name": "getMyOrders",
+					"outcome": "executed"
+				},
+				{
+					"name": "issueCredit",
+					"outcome": "denied"
+				}
+			],
+			"latencyMs": 25312,
+			"traceId": "9ea0fa594c1f8df491f71e86fdd9cc40"
+		}
+	],
+	"summary": {
+		"cases": 1,
+		"errors": 0,
+		"passRate": 1,
+		"means": {
+			"phrases": 1,
+			"credit": 1,
+			"correctness": 1,
+			"faithfulness": 1,
+			"pass": 1
+		},
+		"byCategory": {
+			"actions": {
+				"cases": 1,
+				"passRate": 1
+			}
+		},
+		"bySplit": {
+			"train": {
+				"cases": 1,
+				"passRate": 1
+			}
+		}
+	}
+}

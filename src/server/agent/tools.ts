@@ -123,6 +123,9 @@ type ToolsOptions = {
 	customer: CustomerContext;
 	sources: SourceRegistry;
 	chatId: string;
+	// Evals replay real conversations against real accounts; in dry-run mode
+	// tools that write (credits, tickets) report what they would do instead.
+	dryRun?: boolean;
 };
 
 // Recipes and articles: available to everyone.
@@ -370,6 +373,7 @@ function knowledgeTools({ customer, sources }: ToolsOptions) {
 function accountTools({
 	customer,
 	chatId,
+	dryRun,
 }: ToolsOptions & { customer: NonNullable<CustomerContext> }) {
 	const customerId = customer.id;
 	return {
@@ -410,7 +414,15 @@ function accountTools({
 		getMyOrders: tool({
 			description: `The signed-in customer's boxes with their recipes, split into the next box, upcoming boxes (soonest first) and recent ones (newest first). Today is ${TODAY}. "changeable" means it's before the cutoff, so recipes can still be swapped or the box skipped. "creditable" means a problem can still be reported (delivered within ${REPORT_WINDOW_DAYS} days).`,
 			inputSchema: z.object({
-				recentLimit: z.number().int().min(1).max(8).default(3),
+				recentLimit: z
+					.number()
+					.int()
+					.min(1)
+					.max(12)
+					.default(4)
+					.describe(
+						"How many past boxes to include. Raise it (up to 12) when the customer mentions an older delivery.",
+					),
 			}),
 			execute: async ({ recentLimit }) => {
 				const rows = await db
@@ -499,6 +511,9 @@ function accountTools({
 						error: `Above the ${money(AUTO_CREDIT_LIMIT)} automatic limit.`,
 					};
 				}
+				if (dryRun) {
+					return { issued: false, dryRun: true, amount: quote.amount };
+				}
 				const id = `crd_${nanoid(8)}`;
 				await db.insert(credits).values({
 					id,
@@ -543,6 +558,14 @@ function accountTools({
 							opened: false,
 							error: `Order ${orderId} isn't one of this customer's orders.`,
 						};
+				}
+				if (dryRun) {
+					return {
+						opened: true,
+						ticketId: "tkt_dry_run",
+						expectedReply: "within 1 business day",
+						dryRun: true,
+					};
 				}
 				const id = `tkt_${nanoid(8)}`;
 				await db

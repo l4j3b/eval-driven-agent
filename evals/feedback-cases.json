@@ -1,0 +1,25 @@
+[
+	{
+		"id": "feedback-msg-z6yzmrxs7Cqcql8e",
+		"input": {
+			"customerId": "cus_001",
+			"transcript": [
+				{
+					"role": "user",
+					"text": "What temperature should chicken be cooked to?"
+				}
+			]
+		},
+		"expectedOutput": {
+			"criteria": "States 165°F (74°C) for chicken, cited from the food-safety article, and says to check with an instant-read thermometer in the thickest part."
+		},
+		"metadata": {
+			"chatId": "cqW1sE3qR-c-MmKQeVJPj",
+			"source": "user-feedback",
+			"comment": "Didn't say how to check: use an instant-read thermometer in the thickest part.",
+			"feedback": "down",
+			"messageId": "msg-z6yzmrxs7Cqcql8e",
+			"flaggedAnswer": "For all poultry, including ground poultry, the safe internal cooking temperature is 165°F (74°C) [1]."
+		}
+	}
+]

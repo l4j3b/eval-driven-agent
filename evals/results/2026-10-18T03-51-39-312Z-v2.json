@@ -1,0 +1,127 @@
+{
+	"runName": "v2 · all · 2026-10-18T03:51",
+	"split": "all",
+	"scorerVersion": 2,
+	"prompt": {
+		"version": 2,
+		"resolvedVersion": 2
+	},
+	"models": {
+		"agent": "google/gemini-2.5-flash",
+		"judge": "google/gemini-2.5-flash"
+	},
+	"startedAt": "2026-10-18T03:51:39.312Z",
+	"finishedAt": "2026-10-18T03:52:56.468Z",
+	"datasetRunUrl": "http://localhost:3000/project/agent-lab/experiments/results?baseline=d2684b8b53e55640",
+	"cases": [
+		{
+			"id": "credit-already-credited-box",
+			"category": "actions",
+			"split": "train",
+			"source": "seed",
+			"question": "The pad see ew in my latest box was missing the tofu. Can I get a credit?",
+			"transcript": [
+				{
+					"role": "user",
+					"text": "The pad see ew in my latest box was missing the tofu. Can I get a credit?"
+				}
+			],
+			"criteria": "Attempts the credit for Pad See Ew with Tofu in order ord_0026. Explains it's above the $25 automatic limit (the box already has a $20 credit, and 4 servings come to $37.96) and offers or opens a support review. Never claims a credit was issued.",
+			"pass": true,
+			"scores": {
+				"phrases": 1,
+				"credit": 1,
+				"correctness": 1,
+				"faithfulness": 1,
+				"pass": 1
+			},
+			"comments": {
+				"phrases": "all present",
+				"credit": "attempted pad-see-ew-with-tofu on ord_0026: denied (This credit would be $37.96 on top of $20.00 already credited for this box, above the $25 automatic limit per box. Offer to open a support review instead.)",
+				"correctness": "5/5: The assistant correctly identified the relevant order and recipe for the credit request. It then attempted to issue the credit using the `issueCredit` tool. Upon denial, it accurately explained that the credit would exceed the automatic $25 limit for the box, as stated in the tool's denial message. Finally, it correctly offered to open a support review, without claiming the credit was issued.",
+				"faithfulness": "5/5: All facts presented in the assistant's response, such as the order ID, recipe name, the creditable status, and the reason for the credit denial (automatic limit of $25 per box), are directly supported by the `getMyOrders` and `issueCredit` tool outputs.",
+				"pass": "passed"
+			},
+			"answer": "It looks like your order `ord_0026` for the Pad See Ew with Tofu is eligible for a credit. However, issuing the credit would put it over the automatic limit of $25 per box. I can open a support review for you to have a member of our team look into this. Would you like me to do that?",
+			"toolCalls": [
+				{
+					"name": "getMyOrders",
+					"outcome": "executed"
+				},
+				{
+					"name": "issueCredit",
+					"outcome": "denied"
+				}
+			],
+			"latencyMs": 61044,
+			"traceId": "1f582e084ab8218b7856fc5bca2d41f1"
+		},
+		{
+			"id": "four-person-price",
+			"category": "policy",
+			"split": "train",
+			"source": "seed",
+			"question": "How much does the 4-person plan cost per serving?",
+			"transcript": [
+				{
+					"role": "user",
+					"text": "How much does the 4-person plan cost per serving?"
+				}
+			],
+			"criteria": "Says $9.49 per serving, cited.",
+			"pass": true,
+			"scores": {
+				"phrases": 1,
+				"citations": 1,
+				"correctness": 1,
+				"faithfulness": 1,
+				"pass": 1
+			},
+			"comments": {
+				"phrases": "all present",
+				"citations": "cited 1",
+				"correctness": "5/5: The assistant correctly identified the cost of the 4-person plan per serving from the search results and cited the source. The answer directly addresses the user's question.",
+				"faithfulness": "5/5: The assistant's answer states that the 4-person plan costs $9.49 per serving and attributes this information to source [1]. Source [1] indeed contains the sentence: 'If you're feeding a larger household, our **4-person plan** provides generous portions at an even better value of **$9.49 per serving**.' All information is directly supported by the provided tool output.",
+				"pass": "passed"
+			},
+			"answer": "The 4-person plan costs $9.49 per serving [1].",
+			"toolCalls": [
+				{
+					"name": "searchKnowledge",
+					"outcome": "executed"
+				}
+			],
+			"latencyMs": 25226,
+			"traceId": "8e59151a77e6251cb9be588045489316"
+		}
+	],
+	"summary": {
+		"cases": 2,
+		"errors": 0,
+		"passRate": 1,
+		"means": {
+			"phrases": 1,
+			"credit": 1,
+			"correctness": 1,
+			"faithfulness": 1,
+			"pass": 1,
+			"citations": 1
+		},
+		"byCategory": {
+			"actions": {
+				"cases": 1,
+				"passRate": 1
+			},
+			"policy": {
+				"cases": 1,
+				"passRate": 1
+			}
+		},
+		"bySplit": {
+			"train": {
+				"cases": 2,
+				"passRate": 1
+			}
+		}
+	}
+}

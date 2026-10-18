@@ -8,6 +8,7 @@ import {
 	ActivityIcon,
 	ChefHatIcon,
 	DatabaseIcon,
+	FlaskConicalIcon,
 	SearchIcon,
 	SquarePenIcon,
 	ThumbsUpIcon,
@@ -32,14 +33,22 @@ import { deleteChat } from "#/server/chats";
 
 export type ChatSummary = { id: string; title: string; updatedAt: Date };
 
-const LANGFUSE_URL = "http://localhost:3000";
+// Everything besides chatting, in the order of the pipeline it demos.
+const PAGES = [
+	{ to: "/search", label: "Search", icon: SearchIcon },
+	{ to: "/evals", label: "Evals", icon: FlaskConicalIcon },
+	{ to: "/feedback", label: "Feedback", icon: ThumbsUpIcon },
+	{ to: "/data", label: "Data", icon: DatabaseIcon },
+] as const;
 
 export function AppSidebar({
 	chats,
 	session,
+	langfuseUrl,
 }: {
 	chats: ChatSummary[];
 	session: SessionInfo;
+	langfuseUrl: string;
 }) {
 	const pathname = useRouterState({
 		select: (state) => state.location.pathname,
@@ -88,30 +97,16 @@ export function AppSidebar({
 									</Link>
 								</SidebarMenuButton>
 							</SidebarMenuItem>
-							<SidebarMenuItem>
-								<SidebarMenuButton asChild isActive={pathname === "/search"}>
-									<Link to="/search">
-										<SearchIcon />
-										Search
-									</Link>
-								</SidebarMenuButton>
-							</SidebarMenuItem>
-							<SidebarMenuItem>
-								<SidebarMenuButton asChild isActive={pathname === "/feedback"}>
-									<Link to="/feedback">
-										<ThumbsUpIcon />
-										Feedback
-									</Link>
-								</SidebarMenuButton>
-							</SidebarMenuItem>
-							<SidebarMenuItem>
-								<SidebarMenuButton asChild isActive={pathname === "/data"}>
-									<Link to="/data">
-										<DatabaseIcon />
-										Data
-									</Link>
-								</SidebarMenuButton>
-							</SidebarMenuItem>
+							{PAGES.map((page) => (
+								<SidebarMenuItem key={page.to}>
+									<SidebarMenuButton asChild isActive={pathname === page.to}>
+										<Link to={page.to}>
+											<page.icon />
+											{page.label}
+										</Link>
+									</SidebarMenuButton>
+								</SidebarMenuItem>
+							))}
 						</SidebarMenu>
 					</SidebarGroupContent>
 				</SidebarGroup>
@@ -154,7 +149,11 @@ export function AppSidebar({
 				<SidebarMenu>
 					<SidebarMenuItem>
 						<SidebarMenuButton asChild>
-							<a href={LANGFUSE_URL} rel="noreferrer" target="_blank">
+							<a
+								href={`${langfuseUrl}/traces`}
+								rel="noreferrer"
+								target="_blank"
+							>
 								<ActivityIcon />
 								Traces in Langfuse
 							</a>

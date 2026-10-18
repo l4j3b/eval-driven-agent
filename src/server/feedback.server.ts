@@ -1,4 +1,3 @@
-import { LangfuseClient } from "@langfuse/client";
 import { and, asc, eq, inArray, sql } from "drizzle-orm";
 
 import { db } from "#/db/client";
@@ -9,8 +8,7 @@ import {
 	type EvalInput,
 	type MessageMetadata,
 } from "#/lib/evals";
-
-const langfuse = new LangfuseClient();
+import { ensureEvalDataset, langfuse } from "#/server/langfuse.server";
 
 const textOf = (parts: unknown) =>
 	(parts as { type: string; text?: string }[])
@@ -155,21 +153,6 @@ export async function listFeedback(): Promise<FeedbackItem[]> {
 	return items.sort((a, b) => b.at.localeCompare(a.at));
 }
 
-let datasetReady: Promise<unknown> | null = null;
-function ensureDataset() {
-	datasetReady ??= langfuse.api.datasets
-		.create({
-			name: EVAL_DATASET,
-			description:
-				"Eval cases for the Mise agent: hand-written cases and answers users flagged, each with criteria for a good answer.",
-		})
-		.catch((error) => {
-			datasetReady = null;
-			throw error;
-		});
-	return datasetReady;
-}
-
 // The flywheel: a flagged answer plus a human's description of what a good
 // answer would do becomes a regression case, linked to the trace it came from.
 export async function addToDataset(input: {
@@ -184,7 +167,7 @@ export async function addToDataset(input: {
 			candidate.messageId === input.messageId,
 	);
 	if (!item) throw new Error("No feedback for that answer.");
-	await ensureDataset();
+	await ensureEvalDataset();
 
 	const evalInput: EvalInput = {
 		customerId: item.customerId,

@@ -7,32 +7,23 @@ import {
 	createIdGenerator,
 	createUIMessageStreamResponse,
 	isToolUIPart,
-	stepCountIs,
 	streamText,
-	type ToolSet,
 	toUIMessageStream,
 	type UIMessage,
 	validateUIMessages,
 } from "ai";
+import { z } from "zod";
 
 import type { MessageMetadata } from "#/lib/evals";
-import { MODELS } from "#/lib/models";
-import { SourceRegistry } from "#/lib/sources";
-import { loadAgentPrompt, loadCustomer } from "#/server/agent/prompt";
-import {
-	AUTO_CREDIT_LIMIT,
-	createTools,
-	quoteCredit,
-} from "#/server/agent/tools";
+import { prepareAgent } from "#/server/agent/agent";
 import {
 	CHAT_ID,
 	chatOwner,
 	loadMessages,
+	MESSAGE_ID,
 	saveMessages,
 } from "#/server/chat-store";
 import { currentCustomerId } from "#/server/session.server";
-
-const MAX_STEPS = 8;
 
 // When the customer answers an approval, the client sends the assistant
 // message back. Only the decisions are taken from it: the tool calls and
@@ -65,35 +56,16 @@ function applyApprovals(stored: UIMessage, incoming: UIMessage): UIMessage {
 	} as UIMessage;
 }
 
-// Credits need the customer's OK, and the policy is checked before asking:
-// anything the policy forbids, including amounts over the cap, is refused
-// outright with a reason the agent can relay.
-function creditApproval(customerId: string | null) {
-	return async (input: unknown) => {
-		const { orderId, recipeId } = input as {
-			orderId: string;
-			recipeId: string;
-		};
-		if (!customerId) {
-			return { type: "denied" as const, reason: "No customer is signed in." };
-		}
-		const quote = await quoteCredit(customerId, orderId, recipeId);
-		if (!quote.ok) return { type: "denied" as const, reason: quote.error };
-		if (quote.overLimit) {
-			const already = quote.alreadyCredited
-				? ` on top of $${quote.alreadyCredited.toFixed(2)} already credited for this box`
-				: "";
-			return {
-				type: "denied" as const,
-				reason: `This credit would be $${quote.amount.toFixed(2)}${already}, above the $${AUTO_CREDIT_LIMIT} automatic limit per box. Offer to open a support review instead.`,
-			};
-		}
-		return {
-			type: "user-approval" as const,
-			reason: `Credit $${quote.amount.toFixed(2)} for ${quote.recipeTitle} (order ${orderId}, delivered ${quote.deliveryDate}).`,
-		};
-	};
-}
+// The client sends the chat id and one message; validateUIMessages checks the
+// message's parts in full once the history is assembled.
+const requestBody = z.object({
+	id: z.string().regex(CHAT_ID),
+	message: z.looseObject({
+		id: z.string().regex(MESSAGE_ID),
+		role: z.enum(["user", "assistant"]),
+		parts: z.array(z.looseObject({ type: z.string() })),
+	}),
+});
 
 const textOf = (message: UIMessage) =>
 	message.parts
@@ -112,11 +84,14 @@ export const Route = createFileRoute("/api/chat")({
 					);
 				}
 
-				const { id, message }: { id: string; message: UIMessage } =
-					await request.json();
-				if (!CHAT_ID.test(id)) {
-					return new Response("Invalid chat id.", { status: 400 });
+				const body = requestBody.safeParse(
+					await request.json().catch(() => null),
+				);
+				if (!body.success) {
+					return new Response("Invalid request.", { status: 400 });
 				}
+				const { id } = body.data;
+				const message = body.data.message as UIMessage;
 
 				// A chat belongs to the customer who started it.
 				const owner = await chatOwner(id);
@@ -142,24 +117,31 @@ export const Route = createFileRoute("/api/chat")({
 						status: 400,
 					});
 				}
+				// A new user message is text only, and its metadata (trace ids,
+				// feedback) is the server's to set.
 				const latest =
 					stored?.role === "assistant"
 						? applyApprovals(stored, message)
-						: message;
+						: {
+								id: message.id,
+								role: "user" as const,
+								parts: message.parts.filter((part) => part.type === "text"),
+							};
 				const history = [
 					...previous.filter((row) => row.id !== latest.id),
 					latest,
 				];
 
-				const customer = await loadCustomer(customerId);
-				const tools = createTools({
-					customer,
-					sources: new SourceRegistry(history),
+				const agent = await prepareAgent({
+					customerId,
 					chatId: id,
-				}) as ToolSet;
-				const messages = await validateUIMessages({ messages: history, tools });
+					history,
+				});
+				const messages = await validateUIMessages({
+					messages: history,
+					tools: agent.tools,
+				});
 				await saveMessages(id, [latest], customerId);
-				const prompt = await loadAgentPrompt(customer);
 				const question = textOf(
 					history.findLast((row) => row.role === "user") ?? latest,
 				);
@@ -173,7 +155,8 @@ export const Route = createFileRoute("/api/chat")({
 						userId: customerId ?? "guest",
 						tags: ["chat"],
 						metadata: {
-							promptVersion: String(prompt.langfusePrompt.version),
+							promptVersion: String(agent.prompt.langfusePrompt.version),
+							model: agent.modelId,
 						},
 					},
 					() =>
@@ -182,23 +165,10 @@ export const Route = createFileRoute("/api/chat")({
 							async (turn) => {
 								turn.update({ input: question });
 								const result = streamText({
-									model: MODELS.agent,
-									instructions: prompt.instructions,
-									messages: await convertToModelMessages(messages, { tools }),
-									tools,
-									stopWhen: stepCountIs(MAX_STEPS),
-									// Each step is a model call; the free tier allows ~5 a
-									// minute, so retry rate limits with backoff instead of
-									// failing the turn.
-									maxRetries: 4,
-									toolApproval: { issueCredit: creditApproval(customerId) },
-									experimental_toolApprovalSecret:
-										process.env.TOOL_APPROVAL_SECRET,
-									runtimeContext: { langfusePrompt: prompt.langfusePrompt },
-									telemetry: {
-										functionId: "chat",
-										includeRuntimeContext: { langfusePrompt: true },
-									},
+									...agent.settings,
+									messages: await convertToModelMessages(messages, {
+										tools: agent.tools,
+									}),
 								});
 
 								return createUIMessageStreamResponse({

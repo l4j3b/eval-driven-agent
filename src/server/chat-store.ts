@@ -4,8 +4,10 @@ import { and, asc, desc, eq, isNull, type SQL, sql } from "drizzle-orm";
 import { db } from "#/db/client";
 import { chatMessages, chats } from "#/db/schema";
 
-// Chat ids come from the URL, so treat them as opaque tokens.
+// Chat ids come from the URL and user message ids from the browser, so both
+// are treated as opaque tokens.
 export const CHAT_ID = /^[A-Za-z0-9_-]{1,64}$/;
+export const MESSAGE_ID = /^[A-Za-z0-9_-]{1,64}$/;
 
 const TITLE_LENGTH = 60;
 
@@ -96,6 +98,9 @@ export async function saveMessages(
 			)
 			.onConflictDoUpdate({
 				target: chatMessages.id,
+				// Message ids come partly from the browser: never let one chat
+				// overwrite a message that belongs to another.
+				setWhere: sql`${chatMessages.chatId} = excluded.chat_id`,
 				set: {
 					parts: sql`excluded.parts`,
 					// Merge, so feedback saved on a message survives the message

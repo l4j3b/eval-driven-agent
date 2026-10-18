@@ -7,6 +7,7 @@ import {
 	listFeedback,
 	recordFeedback,
 } from "#/server/feedback.server";
+import { LANGFUSE_PROJECT_URL } from "#/server/langfuse.server";
 import { currentCustomerId } from "#/server/session.server";
 
 const answer = {
@@ -29,7 +30,7 @@ export const submitFeedback = createServerFn({ method: "POST" })
 export const getFeedback = createServerFn({ method: "GET" }).handler(
 	async () => ({
 		items: await listFeedback(),
-		langfuseUrl: `${process.env.LANGFUSE_BASE_URL ?? "http://localhost:3000"}/project/agent-lab`,
+		langfuseUrl: LANGFUSE_PROJECT_URL,
 	}),
 );
 

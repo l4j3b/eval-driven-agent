@@ -9,3 +9,6 @@ dist-ssr
 .output
 .vinxi
 langfuse/.env
+
+# Local run logs
+evals/*.log
