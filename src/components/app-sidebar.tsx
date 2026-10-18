@@ -8,6 +8,7 @@ import {
 	ActivityIcon,
 	ChefHatIcon,
 	DatabaseIcon,
+	SearchIcon,
 	SquarePenIcon,
 	Trash2Icon,
 } from "lucide-react";
@@ -77,6 +78,14 @@ export function AppSidebar({ chats }: { chats: ChatSummary[] }) {
 									<Link to="/">
 										<SquarePenIcon />
 										New chat
+									</Link>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+							<SidebarMenuItem>
+								<SidebarMenuButton asChild isActive={pathname === "/search"}>
+									<Link to="/search">
+										<SearchIcon />
+										Search
 									</Link>
 								</SidebarMenuButton>
 							</SidebarMenuItem>

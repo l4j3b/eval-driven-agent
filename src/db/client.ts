@@ -9,7 +9,12 @@ const globalForDb = globalThis as unknown as { sql?: postgres.Sql };
 
 export const sql =
 	globalForDb.sql ??
-	postgres(process.env.DATABASE_URL as string, { max: 5, idle_timeout: 20 });
+	postgres(process.env.DATABASE_URL as string, {
+		max: 5,
+		idle_timeout: 20,
+		// Notices are informational (e.g. a keyword query with only stopwords).
+		onnotice: () => {},
+	});
 
 if (process.env.NODE_ENV !== "production") globalForDb.sql = sql;
 

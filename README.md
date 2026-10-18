@@ -12,6 +12,7 @@ npm install
 npm run langfuse:up          # Langfuse at http://localhost:3000
 npm run db:migrate           # after running db/bootstrap.sql once
 npm run db:seed              # loads data/*.json (regenerate with npm run data:generate)
+npm run index                # chunks, contextualizes and embeds for search
 npm run dev                  # app at http://localhost:3001
 ```
 
@@ -22,8 +23,8 @@ Each phase ends with something runnable and a short write-up in `docs/`.
 | Phase | What it adds | Status |
 | --- | --- | --- |
 | 0 · [Setup](docs/00-setup.md) | Chat UI, AI Gateway, Langfuse tracing, database roles | Done |
-| 1 · [Data](docs/01-data.md) | Dummy recipes, articles, customers and orders; saved chats and a sidebar; a Data page; chunking and embeddings | Data, saved chats and Data page done; chunking and embeddings come with phase 2 |
-| 2 · Retrieval | Vector, keyword and hybrid search with rerank; a `/search` playground | |
+| 1 · [Data](docs/01-data.md) | Dummy recipes, articles, customers and orders; saved chats and a sidebar; a Data page | Done |
+| 2 · [Retrieval](docs/02-retrieval.md) | Chunking, contextual retrieval, embeddings; vector, keyword and hybrid search with rerank; a `/search` playground | Done |
 | 3 · Agent | System prompt in Langfuse, tools, citations, approval for write tools | |
 | 4 · Feedback | Thumbs up/down as Langfuse scores; failing traces become dataset items | |
 | 5 · Evals | Datasets, deterministic and LLM-judge scorers, experiments | |

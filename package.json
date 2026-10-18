@@ -17,6 +17,7 @@
     "db:migrate": "tsx scripts/migrate.ts",
     "db:seed": "tsx --env-file=.env.local scripts/seed.ts",
     "data:generate": "tsx --env-file=.env.local scripts/generate-data.ts",
+    "index": "tsx --env-file=.env.local scripts/index-content.ts",
     "langfuse:up": "docker compose -f langfuse/docker-compose.yml --env-file langfuse/.env up -d",
     "langfuse:down": "docker compose -f langfuse/docker-compose.yml --env-file langfuse/.env down"
   },

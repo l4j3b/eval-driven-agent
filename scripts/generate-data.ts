@@ -17,6 +17,7 @@ import { generateText, Output } from "ai";
 import { z } from "zod";
 
 import { MODELS } from "#/lib/models";
+import { pool } from "#/lib/pool";
 import { slugify } from "#/lib/slug";
 import { flushTelemetry } from "#/server/telemetry";
 
@@ -33,6 +34,11 @@ import {
 } from "./data/briefs";
 
 const force = process.argv.includes("--force");
+// --articles=id1,id2 regenerates only those articles, keeping the rest.
+const onlyArticles = process.argv
+	.find((arg) => arg.startsWith("--articles="))
+	?.slice("--articles=".length)
+	.split(",");
 const DATA_DIR = "data";
 
 // --- Schemas the model fills in ------------------------------------------------
@@ -86,24 +92,6 @@ const generatedArticle = z.object({
 type GeneratedRecipe = z.infer<typeof generatedRecipe>;
 
 // --- Helpers -----------------------------------------------------------------
-
-async function pool<T, R>(
-	items: T[],
-	size: number,
-	run: (item: T) => Promise<R>,
-): Promise<R[]> {
-	const results: R[] = new Array(items.length);
-	let next = 0;
-	await Promise.all(
-		Array.from({ length: Math.min(size, items.length) }, async () => {
-			while (next < items.length) {
-				const index = next++;
-				results[index] = await run(items[index] as T);
-			}
-		}),
-	);
-	return results;
-}
 
 function hash(text: string) {
 	let h = 2166136261;
@@ -245,8 +233,16 @@ ${RECIPE_RULES}`,
 
 // --- Articles ----------------------------------------------------------------
 
-async function generateArticles() {
-	return pool(ARTICLE_BRIEFS, 4, async (brief: ArticleBrief) => {
+// Structured output guarantees a string, not well-formed markdown: one run
+// returned an article with every line break missing. Check the structure the
+// chunker relies on, and ask again if it's wrong.
+function wellFormed(body: string) {
+	const headings = body.match(/^#{2,3} .{1,120}$/gm) ?? [];
+	return headings.length >= 2 && body.includes("\n\n");
+}
+
+async function generateArticle(brief: ArticleBrief) {
+	for (let attempt = 1; ; attempt++) {
 		const { output } = await generateText({
 			model: MODELS.generator,
 			maxRetries: 4,
@@ -255,9 +251,26 @@ async function generateArticles() {
 			prompt: `Write a ${brief.category} article for Mise, a meal-kit company, titled "${brief.title}".
 Include every one of these facts, keeping each number exactly as written:
 ${brief.facts.map((fact) => `- ${fact}`).join("\n")}
-Don't add any other prices, time limits, amounts or temperatures. Write in a friendly, plain voice for home cooks and customers.`,
+Don't add any other prices, time limits, amounts or temperatures. Write in a friendly, plain voice for home cooks and customers.
+Format the body as markdown: each "## " heading on its own line, with a blank line between paragraphs.`,
 			telemetry: { functionId: "generate-articles" },
 		});
+		if (wellFormed(output.body) || attempt === 3) {
+			if (!wellFormed(output.body)) {
+				console.warn(`articles: ${brief.id} is still malformed after 3 tries`);
+			}
+			return output;
+		}
+		console.warn(`articles: ${brief.id} came back malformed, retrying`);
+	}
+}
+
+async function generateArticles(only?: string[]) {
+	const briefs = only
+		? ARTICLE_BRIEFS.filter((brief) => only.includes(brief.id))
+		: ARTICLE_BRIEFS;
+	return pool(briefs, 4, async (brief: ArticleBrief) => {
+		const output = await generateArticle(brief);
 
 		// Every number in the facts should survive into the article.
 		const numbers = brief.facts.join(" ").match(/\$?\d+(?:[./]\d+)?/g) ?? [];
@@ -665,11 +678,20 @@ async function main() {
 					return recipes;
 				})
 			: readJson<Recipe[]>("recipes.json"),
-		want("articles.json")
-			? generateArticles().then((articles) =>
-					writeJson("articles.json", articles),
-				)
-			: Promise.resolve(),
+		onlyArticles
+			? generateArticles(onlyArticles).then(async (fresh) => {
+					const byId = new Map(fresh.map((article) => [article.id, article]));
+					const current = await readJson<typeof fresh>("articles.json");
+					await writeJson(
+						"articles.json",
+						current.map((article) => byId.get(article.id) ?? article),
+					);
+				})
+			: want("articles.json")
+				? generateArticles().then((articles) =>
+						writeJson("articles.json", articles),
+					)
+				: Promise.resolve(),
 	]);
 	void articles;
 

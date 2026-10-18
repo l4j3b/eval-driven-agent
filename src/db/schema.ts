@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import {
 	boolean,
+	customType,
 	date,
 	index,
 	integer,
@@ -12,7 +13,10 @@ import {
 	text,
 	timestamp,
 	uniqueIndex,
+	vector,
 } from "drizzle-orm/pg-core";
+
+import { EMBEDDING_DIMENSIONS } from "#/lib/models";
 
 // Everything the demo stores lives in its own schema, owned by the agent_app role.
 // Catalog and account rows use readable, stable ids ("miso-butter-salmon",
@@ -26,6 +30,9 @@ const createdAt = () =>
 const emptyArray = sql`'{}'`;
 const money = (precision = 8) =>
 	numeric({ precision, scale: 2, mode: "number" });
+const tsvector = customType<{ data: string }>({
+	dataType: () => "tsvector",
+});
 
 export const course = agent.enum("course", [
 	"main",
@@ -60,6 +67,7 @@ export const subscriptionStatus = agent.enum("subscription_status", [
 	"paused",
 	"cancelled",
 ]);
+export const chunkSource = agent.enum("chunk_source", ["recipe", "article"]);
 export const orderStatus = agent.enum("order_status", [
 	"scheduled",
 	"processing",
@@ -152,6 +160,44 @@ export const weeklyMenus = agent
 		(t) => [
 			primaryKey({ columns: [t.weekStart, t.recipeId] }),
 			index().on(t.recipeId),
+		],
+	)
+	.enableRLS();
+
+// --- Retrieval ---------------------------------------------------------------
+
+// What search runs over: pieces of recipes and articles, each embedded once.
+// `content` is the raw text; `context` is a sentence an LLM wrote to situate an
+// article chunk in its article (contextual retrieval). Both are embedded and
+// indexed for keyword search, with the title and heading weighted higher.
+export const chunks = agent
+	.table(
+		"chunks",
+		{
+			id: text().primaryKey(),
+			sourceType: chunkSource().notNull(),
+			sourceId: text().notNull(),
+			position: integer().notNull(),
+			title: text().notNull(),
+			heading: text(),
+			content: text().notNull(),
+			context: text(),
+			// Hash of everything that goes into the embedding, so re-indexing
+			// only re-embeds chunks that changed.
+			contentHash: text().notNull(),
+			embedding: vector({ dimensions: EMBEDDING_DIMENSIONS }).notNull(),
+			fts: tsvector().generatedAlwaysAs(
+				sql`setweight(to_tsvector('english', coalesce("title", '')), 'A') || setweight(to_tsvector('english', coalesce("heading", '')), 'B') || setweight(to_tsvector('english', coalesce("context", '') || ' ' || "content"), 'C')`,
+			),
+			createdAt: createdAt(),
+		},
+		(t) => [
+			index().on(t.sourceType, t.sourceId),
+			index("chunks_embedding_hnsw").using(
+				"hnsw",
+				t.embedding.op("vector_cosine_ops"),
+			),
+			index("chunks_fts_gin").using("gin", t.fts),
 		],
 	)
 	.enableRLS();
